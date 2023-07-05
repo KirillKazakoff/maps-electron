@@ -20,9 +20,9 @@ export const downloadXML = async (browser: Browser, url: string) => {
         const selectorXMLOption = 'a[title="XML-файл с данными отчета"]';
         await page.click(selectorMenu);
         await page.click(selectorXMLOption);
-
-        setTimeout(() => page.close(), 15000);
     } catch (e) {
+        console.log(browser);
+        browser.close();
         return;
     }
 };

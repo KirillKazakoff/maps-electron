@@ -13,7 +13,7 @@ const parseCoordinatesField = (value: string) => {
 
 export const parseCoordinates = (result: CoordsReportT) => {
     return result.reduce<Coordinates[]>((total, value) => {
-        const vessel_id = value.NAME_VES[0].split(/[\(\)]/)[1];
+        const vessel_id = value.NAME_VES[0].split(/[()]/)[1];
         const course = value.COURSE ? +value.COURSE[0] : 0;
         const date = value.DATETIME[0];
         const velocity = +value.VELOCITY[0];

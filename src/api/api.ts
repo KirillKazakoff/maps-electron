@@ -1,4 +1,4 @@
-import { Vessel } from './models';
+import { Coordinates, Vessel } from './models';
 import { SSDInfo } from '../xml/parseReportSSD/parseReportSSD';
 import axios from 'axios';
 
@@ -9,6 +9,9 @@ const updateZones = async (data: any) => {
 };
 const sendSSDInfo = async (data: SSDInfo) => {
     await axios.post(`${baseUrl}/ssd`, data);
+};
+const sendCoordinates = async (data: Coordinates[]) => {
+    await axios.post(`${baseUrl}/coordinates`, data);
 };
 const getVesselById = async (id: string) => {
     const res = await axios.get<Vessel>(`${baseUrl}/vesselsById/${id}`);
@@ -25,6 +28,7 @@ export const api = {
     },
     send: {
         ssdInfo: sendSSDInfo,
+        coordinates: sendCoordinates,
     },
     get: {
         vesselsByCompany: getVesselsByCompanyId,

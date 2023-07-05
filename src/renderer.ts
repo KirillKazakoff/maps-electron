@@ -42,9 +42,10 @@ import './index.css';
 
 const ssdAllBtn = document.querySelector('.download-all');
 const ssdLastBtn = document.querySelector('.download-last');
+const coordsBtn = document.querySelector('.download-coords');
 
 ssdAllBtn.addEventListener('click', () => window.electronAPI.downloadSSDAll());
 ssdLastBtn.addEventListener('click', () => window.electronAPI.downloadSSDLast());
-// ssdLastBtn.addEventListener('click', () => window.electronApi.downloadSSDLast());
+coordsBtn.addEventListener('click', () => window.electronAPI.downloadCoords());
 
 // window.location = 'https://www.google.com/';
