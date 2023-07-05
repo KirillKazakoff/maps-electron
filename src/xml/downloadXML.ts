@@ -1,13 +1,16 @@
-import { Browser } from 'puppeteer';
 import { setFunctionsInPageContext } from '../pageLogic/setFunctionsInPageContext';
+import { browser } from '../browser';
 
-export const downloadXML = async (browser: Browser, url: string) => {
+export const downloadXML = async (url: string) => {
+    let intervalId: NodeJS.Timer;
     try {
-        const page = await browser.newPage();
+        const page = await browser.instance.newPage();
         const functions = setFunctionsInPageContext(page);
         await page.goto(url);
         await new Promise((resolve) => {
-            const intervalId = setInterval(async () => {
+            intervalId = setInterval(async () => {
+                if (!browser.instance) clearInterval(intervalId);
+
                 const isSpan = await functions.selectSpan();
                 if (isSpan) {
                     resolve('ready');
@@ -22,7 +25,7 @@ export const downloadXML = async (browser: Browser, url: string) => {
         await page.click(selectorXMLOption);
     } catch (e) {
         console.log(browser);
-        browser.close();
+        browser.instance.close();
         return;
     }
 };

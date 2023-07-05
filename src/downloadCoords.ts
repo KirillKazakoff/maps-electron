@@ -5,13 +5,13 @@ import { calcARMDateNow } from './xml/calcARMDate';
 import { downloadXML } from './xml/downloadXML';
 
 const downloadCoordsCb = async (settings: SettingsLoginT) => {
-    const { vesselsId, browser, page } = await login(settings);
-    await page.goto('https://mon.cfmc.ru');
+    const page = await login(settings);
+    // await page.goto('https://mon.cfmc.ru');
     const vesselListID = page.url().split('/')[4];
     const date = calcARMDateNow();
 
     const reportUrl = `https://mon.cfmc.ru/ReportViewer.aspx?Report=18&IsAdaptive=false&VesselListId=${vesselListID}&StartDate=${date.start}&EndDate=${date.end}`;
-    await downloadXML(browser.instance, reportUrl);
+    await downloadXML(reportUrl);
 };
 
 export const downloadCoords = async () => {

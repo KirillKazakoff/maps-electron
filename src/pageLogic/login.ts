@@ -1,4 +1,3 @@
-import { api } from '../api/api';
 import { timePromise } from '../utils/time';
 import { SettingsLoginT } from '../xml/settingsLogin';
 import { browser } from '../browser';
@@ -22,19 +21,18 @@ export async function login(settings: SettingsLoginT) {
             inputs.password.value = s.password;
         }, settings);
 
-        const vesselsId = await api.get.vesselsByCompany(settings.companyId);
-
         await page.click('button.btn-danger');
-        await timePromise(12000);
+        await timePromise(10000);
 
         console.log('on portal');
 
         await page.hover('.sub-navigation');
         await page.click('#id14');
-        await timePromise(12000);
+        await timePromise(10000);
+        await page.goto('https://mon.cfmc.ru');
 
         console.log('on ARM');
-        return { browser, vesselsId, page };
+        return page;
     } catch (e) {
         console.log(e);
         // browser.instance.close();
