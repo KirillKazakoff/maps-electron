@@ -3,8 +3,9 @@ import { readXmlCoords } from './xml/readXmlCoords';
 import { login } from './pageLogic/login';
 import { calcARMDateNow } from './xml/calcARMDate';
 import { downloadXML } from './xml/downloadXML';
+import { api } from './api/api';
 
-const downloadCoordsCb = async (settings: SettingsLoginT) => {
+const sendCoordsCb = async (settings: SettingsLoginT) => {
     const page = await login(settings);
     // await page.goto('https://mon.cfmc.ru');
     const vesselListID = page.url().split('/')[4];
@@ -14,7 +15,8 @@ const downloadCoordsCb = async (settings: SettingsLoginT) => {
     await downloadXML(reportUrl);
 };
 
-export const downloadCoords = async () => {
-    await downloadReports(downloadCoordsCb);
-    readXmlCoords();
+export const sendCoords = async () => {
+    // await downloadReports(sendCoordsCb);
+    const coordinates = readXmlCoords();
+    api.send.coordinates(coordinates);
 };

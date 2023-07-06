@@ -9,7 +9,7 @@ export const parseDetails = (ssdJson: SSDReportT, ssdParsed: SSD) => {
     // for vessel-catcher
     return detailsCurrentJson.reduce<ProductionDetails[]>((total, details) => {
         const [name, id, current, suffix, type] = Object.values(details).map(
-            (detail) => detail[0],
+            (detail) => detail[0]
         );
         if (!type.includes('вып. из собственного сырья')) return total;
 
@@ -19,11 +19,13 @@ export const parseDetails = (ssdJson: SSDReportT, ssdParsed: SSD) => {
         if (!totalCount) totalCount = 0;
         totalCount = +totalCount;
 
-        const sort = name.split(' ').pop() as string;
+        const nameArr = name.split(' ');
+        const sort = nameArr.pop();
+        const nameParsed = nameArr.join(' ');
 
         const obj: ProductionDetails = {
             id_ssd: ssdParsed.id,
-            name,
+            name: nameParsed,
             current: +current,
             total: totalCount,
             sort,

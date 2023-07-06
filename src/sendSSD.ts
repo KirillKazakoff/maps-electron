@@ -1,12 +1,11 @@
 import { api } from './api/api';
-import { browser } from './browser';
 import { login } from './pageLogic/login';
 import { calcARMDate, calcARMDateNow } from './xml/calcARMDate';
 import { downloadXML } from './xml/downloadXML';
 import { readXmlSSD } from './xml/readXmlSSD';
 import { downloadReports, SettingsLoginCbT, SettingsLoginT } from './xml/settingsLogin';
 
-export const downloadSSDCbLast = async (settings: SettingsLoginT) => {
+export const sendSSDCbLast = async (settings: SettingsLoginT) => {
     await login(settings);
     const vesselsId = await api.get.vesselsByCompany(settings.companyId);
     const date = calcARMDateNow();
@@ -18,7 +17,7 @@ export const downloadSSDCbLast = async (settings: SettingsLoginT) => {
     }
 };
 
-export const downloadSSDCbAll = async (settings: SettingsLoginT) => {
+export const sendSSDCbAll = async (settings: SettingsLoginT) => {
     await login(settings);
     const vesselsId = await api.get.vesselsByCompany(settings.companyId);
 
@@ -34,7 +33,7 @@ export const downloadSSDCbAll = async (settings: SettingsLoginT) => {
     }
 };
 
-export const downloadSSD = async (cb: SettingsLoginCbT) => {
+export const sendSSD = async (cb: SettingsLoginCbT) => {
     await downloadReports(cb);
     const ssdList = readXmlSSD();
     api.send.ssdInfo(ssdList);
