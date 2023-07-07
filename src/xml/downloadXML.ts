@@ -25,7 +25,9 @@ export const downloadXML = async (url: string) => {
         await page.click(selectorXMLOption);
     } catch (e) {
         console.log(browser);
-        browser.instance.close();
+        if (browser.instance) {
+            browser.instance.close();
+        }
         return;
     }
 };

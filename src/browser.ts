@@ -1,7 +1,18 @@
-import { Browser } from 'puppeteer';
+import puppeteer, { Browser } from 'puppeteer';
 
-let instance: Browser;
+class BrowserC {
+    instance: Browser | null;
 
-export const browser = {
-    instance,
-};
+    async launch() {
+        if (!this.instance) return;
+        this.instance = await puppeteer.launch({ devtools: true, headless: false });
+        this.instance.on('disconnected', () => (this.instance = null));
+    }
+
+    async close() {
+        if (!this.instance) return;
+        await this.instance.close();
+    }
+}
+
+export const browser = new BrowserC();

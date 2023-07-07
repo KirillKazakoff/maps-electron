@@ -7,7 +7,6 @@ import { api } from './api/api';
 
 const sendCoordsCb = async (settings: SettingsLoginT) => {
     const page = await login(settings);
-    // await page.goto('https://mon.cfmc.ru');
     const vesselListID = page.url().split('/')[4];
     const date = calcARMDateNow();
 
@@ -16,7 +15,7 @@ const sendCoordsCb = async (settings: SettingsLoginT) => {
 };
 
 export const sendCoords = async () => {
-    // await downloadReports(sendCoordsCb);
+    await downloadReports(sendCoordsCb);
     const coordinates = readXmlCoords();
     api.send.coordinates(coordinates);
 };
