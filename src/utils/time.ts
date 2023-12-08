@@ -1,7 +1,4 @@
-// type UnknownFnT = (...args: any) => any
-// const timePromise = async (callback: ) => {
-
-// }
+/* eslint-disable prefer-spread */
 
 type UnknownFnT = (...args: any) => any;
 
@@ -26,10 +23,3 @@ export const timePromise = async <FnT extends UnknownFnT>(
         }, ms);
     });
 };
-
-// const fn = async () => {
-//     const res = await anotherTime(1000);
-//     console.log(res);
-// }
-
-// fn();

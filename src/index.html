@@ -5,9 +5,28 @@
         <title>Hello World!</title>
     </head>
     <body>
-        <h1>Загрузить с АРМ</h1>
-        <button class="btn download-btn download-all">Download all ssd</button>
-        <button class="btn download-btn download-last">Download last ssd</button>
-        <button class="btn download-btn download-coords">Download coords</button>
+        <h1>Загрузить</h1>
+
+        <form class="form">
+            <div class="checkbox-row">
+                <label for="msi">МСИ</label>
+                <input id="msi" type="checkbox" class="checkbox" checked />
+            </div>
+            <div class="checkbox-row">
+                <label for="trk">ТРК</label>
+                <input id="trk" type="checkbox" class="checkbox" checked />
+            </div>
+            <div class="checkbox-row">
+                <label for="tranzit">МСИ Транзит</label>
+                <input id="tranzit" type="checkbox" class="checkbox" checked />
+            </div>
+        </form>
+
+        <div class="rest-controllers">
+            <button class="btn download-btn download-all">Download all ssd</button>
+            <button class="btn download-btn download-last">Download last ssd</button>
+            <button class="btn download-btn download-coords">Download coords</button>
+            <button class="sendXMLSSD">Send SSD XML</button>
+        </div>
     </body>
 </html>

@@ -1,6 +1,6 @@
 import fs from 'fs';
 import xml2js from 'xml2js';
-import { CoordsReportJsonT, parseCoordinates } from './parseReportCoords';
+import { CoordsReportJsonT, parseReportCoords } from './parseReportSSD/parseReportCoords';
 import { Coordinates } from '../api/models';
 
 const downloadPath = '/Users/kirillkazakov/Downloads';
@@ -10,8 +10,9 @@ export const readXmlCoords = () => {
     const fileNames = fs.readdirSync(downloadPath, { withFileTypes: true });
 
     fileNames.forEach((file) => {
-        if (!file.name.includes('Список позиций судна')) return;
-        if (!file.name.includes('xml')) return;
+        if (['Список позиций судна', 'xml'].some((title) => file.name.includes(title))) {
+            return;
+        }
 
         const filePath = `${downloadPath}/${file.name}`;
         const xml = fs.readFileSync(filePath);
@@ -21,7 +22,7 @@ export const readXmlCoords = () => {
             const table = res.Report?.table1;
             if (!table) return;
 
-            const coordinates = parseCoordinates(table[0].Detail_Collection[0].Detail);
+            const coordinates = parseReportCoords(table[0].Detail_Collection[0].Detail);
             coordsArray.push(...coordinates);
         });
     });

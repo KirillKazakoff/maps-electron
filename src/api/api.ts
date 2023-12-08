@@ -1,37 +1,50 @@
-import { Coordinates, Vessel } from './models';
-import { SSDInfo } from '../xml/parseReportSSD/parseReportSSD';
-import axios from 'axios';
+import {
+    SettingsLoginCbT,
+    SettingsLoginT,
+    downloadReports,
+} from '../armRequest/settingsLogin';
+import { readXmlSSD } from '../xml/readXmlSSD';
+import { readXmlCoords } from '../xml/readXmlCoords';
+import { endpoints } from './endpoints';
+import { downloadCoords } from '../armRequest/downloadXML/downloadCoords';
+import { login } from '../armRequest/login';
+import { downloadSSDLast, downloadSSDAll } from '../armRequest/downloadXML/downloadSSD';
+import { setFunctionsInPageContext } from '../armRequest/pageParse/setFunctionsInPageContext';
 
-const baseUrl = 'http://localhost:9092';
-
-const updateZones = async (data: any) => {
-    await axios.post(`${baseUrl}/zones`, data);
-};
-const sendSSDInfo = async (data: SSDInfo) => {
-    await axios.post(`${baseUrl}/ssd`, data);
-};
-const sendCoordinates = async (data: Coordinates[]) => {
-    await axios.post(`${baseUrl}/coordinates`, data);
-};
-const getVesselById = async (id: string) => {
-    const res = await axios.get<Vessel>(`${baseUrl}/vesselsById/${id}`);
-    return res.data;
-};
-const getVesselsByCompanyId = async (companyId: string) => {
-    const res = await axios.get<Vessel[]>(`${baseUrl}/vessels/${companyId}`);
-    return res.data.map((vessel) => vessel.id);
+const sendXMLSSD = async () => {
+    const ssdList = readXmlSSD();
+    endpoints.send.ssdInfo(ssdList);
 };
 
-export const api = {
-    update: {
-        zones: updateZones,
-    },
-    send: {
-        ssdInfo: sendSSDInfo,
-        coordinates: sendCoordinates,
-    },
-    get: {
-        vesselsByCompany: getVesselsByCompanyId,
-        vessel: getVesselById,
-    },
+const sendSSD = async (cb: SettingsLoginCbT) => {
+    await downloadReports(cb);
+    await sendXMLSSD();
 };
+
+const sendCoords = async () => {
+    await downloadReports(downloadCoords);
+    const coordinates = readXmlCoords();
+    endpoints.send.coordinates(coordinates);
+};
+
+const updateZones = async (settings: SettingsLoginT) => {
+    const page = await login(settings);
+    const functions = setFunctionsInPageContext(page);
+    const zones = await functions.fetchZones();
+    endpoints.update.zones(zones);
+};
+
+const apiInit = () => {
+    return {
+        sendXMLSSD: () => sendXMLSSD(),
+        sendSSDLast: () => {
+            sendSSD(downloadSSDLast);
+        },
+        sendSSDAll: () => sendSSD(downloadSSDAll),
+
+        updateZones: () => updateZones('' as any),
+        sendCoords: () => sendCoords(),
+    };
+};
+
+export const api = apiInit();

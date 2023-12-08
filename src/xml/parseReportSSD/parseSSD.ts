@@ -1,19 +1,18 @@
-import { nanoid } from 'nanoid';
 import { SSD } from '../../api/models';
 import { ReportT } from './parseReportSSD';
 
+// eslint-disable-next-line no-useless-escape
 const rgBracket = /[\(\)]/;
 export type SSDReportT =
     ReportT['Report']['Tablix1'][0]['SSD_DATE_Collection'][0]['SSD_DATE'][0];
 
 export const parseSSD = (ssd: SSDReportT) => {
-    const id = nanoid();
-
     const header = ssd.Textbox33[0];
     const headerSpaced = header.split(' ');
 
     const date = headerSpaced[0];
     const vessel_id = header.split(rgBracket)[1];
+    const id = date + vessel_id;
 
     const agreementStr = headerSpaced[headerSpaced.indexOf('№') + 1].split('\r\n');
     const agreement_no = agreementStr[0];
@@ -30,7 +29,7 @@ export const parseSSD = (ssd: SSDReportT) => {
         return totalC;
     }, '');
 
-    // statusParse
+    // statusParsed
     const statusToken = headerSpaced[headerSpaced.length - 1].toLocaleLowerCase();
     let status = 'НЕИЗВЕСТЕН';
     if (statusToken === 'промысле') status = 'НА ПРОМЫСЛЕ';

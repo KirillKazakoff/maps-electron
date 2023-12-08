@@ -2,7 +2,7 @@
 import { Page } from 'puppeteer';
 
 import { selectSpan } from './selectSpan';
-import { fetchVessels, fetchZones } from '../api/arm';
+import { fetchVessels, fetchZones } from '../fetchData/arm';
 
 type UnknownFnT = (...args: any) => any;
 type EvaluatedT<FnT extends UnknownFnT> = (
@@ -19,16 +19,16 @@ export const setFunctionsInPageContext = (page: Page) => {
                     return func(...argsPage);
                 },
                 callback.toString(),
-                ...args,
+                ...args
             );
         };
         return closure;
     }
 
     const functions = {
-        selectSpan: evaluator<typeof selectSpan>(selectSpan),
-        fetchVessels: evaluator<typeof fetchVessels>(fetchVessels),
-        fetchZones: evaluator<typeof fetchZones>(fetchZones),
+        selectSpan: evaluator(selectSpan),
+        fetchVessels: evaluator(fetchVessels),
+        fetchZones: evaluator(fetchZones),
     };
 
     return functions;

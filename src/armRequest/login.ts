@@ -1,6 +1,6 @@
 import { timePromise } from '../utils/time';
-import { SettingsLoginT } from '../xml/settingsLogin';
-import { browser } from '../browser';
+import { SettingsLoginT } from './settingsLogin';
+import { browser } from './browser';
 
 export async function login(settings: SettingsLoginT) {
     try {
@@ -35,6 +35,6 @@ export async function login(settings: SettingsLoginT) {
         return page;
     } catch (e) {
         console.log(e);
-        // browser.instance.close();
+        browser.instance.close();
     }
 }

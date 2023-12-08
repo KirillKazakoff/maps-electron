@@ -1,5 +1,5 @@
-import { Coordinates } from '../api/models';
-import coordsReport from './filesDebug/coords.json';
+import { Coordinates } from '../../api/models';
+import coordsReport from '../filesDebug/coords.json';
 
 export type CoordsReportJsonT = typeof coordsReport;
 
@@ -11,7 +11,7 @@ const parseCoordinatesField = (value: string) => {
     return coordinates;
 };
 
-export const parseCoordinates = (result: CoordsReportT) => {
+export const parseReportCoords = (result: CoordsReportT) => {
     return result.reduce<Coordinates[]>((total, value) => {
         const vessel_id = value.NAME_VES[0].split(/[()]/)[1];
         const course = value.COURSE ? +value.COURSE[0] : 0;

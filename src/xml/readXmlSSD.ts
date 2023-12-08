@@ -17,8 +17,12 @@ export const readXmlSSD = () => {
 
         xml2js.parseString(xml, { mergeAttrs: true }, (err, result: ReportT) => {
             if (err) throw err;
+
             const ssdInfo = parseReportSSD(result);
+
             if (!ssdInfo) return;
+            if (ssdInfo.ssd.some((s) => ssdInfoArray.ssd.some((ssd) => ssd.id === s.id)))
+                return;
 
             ssdInfoArray.ssd.push(...ssdInfo.ssd);
             ssdInfoArray.productionDetails.push(...ssdInfo.productionDetails);

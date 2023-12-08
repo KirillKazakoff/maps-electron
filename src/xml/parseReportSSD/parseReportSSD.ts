@@ -33,7 +33,7 @@ export const parseReportSSD = (report: ReportT) => {
     if (!SSD_DATE_Collection) return null;
     const { SSD_DATE } = SSD_DATE_Collection[0];
 
-    return SSD_DATE.reduce<SSDInfo>((total, ssdJson) => {
+    const reports = SSD_DATE.reduce<SSDInfo>((total, ssdJson) => {
         const { ssdParsed } = parseSSD(ssdJson);
         total.ssd.push(ssdParsed);
 
@@ -54,4 +54,6 @@ export const parseReportSSD = (report: ReportT) => {
 
         return total;
     }, parsedObj);
+
+    return reports;
 };

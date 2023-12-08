@@ -1,5 +1,5 @@
-import { setFunctionsInPageContext } from '../pageLogic/setFunctionsInPageContext';
 import { browser } from '../browser';
+import { setFunctionsInPageContext } from '../pageParse/setFunctionsInPageContext';
 
 export const downloadXML = async (url: string) => {
     let intervalId: NodeJS.Timer;

@@ -5,8 +5,8 @@
     "description": "My Electron application description",
     "main": ".webpack/main",
     "scripts": {
-        "start": "electron-forge start",
-        "package": "electron-forge package",
+        "start": "nodemon --exec electron-forge start",
+        "package": "export \"LOGIN_TRK=\" electron-forge package",
         "make": "electron-forge make",
         "publish": "electron-forge publish",
         "lint": "eslint --ext .ts,.tsx ."
@@ -24,7 +24,7 @@
         "@electron-forge/maker-squirrel": "^6.2.1",
         "@electron-forge/maker-zip": "^6.2.1",
         "@electron-forge/plugin-auto-unpack-natives": "^6.2.1",
-        "@electron-forge/plugin-webpack": "^6.2.1",
+        "@electron-forge/plugin-webpack": "^6.4.2",
         "@types/dotenv": "^8.2.0",
         "@types/lodash": "^4.14.191",
         "@types/luxon": "^3.3.0",
@@ -38,6 +38,7 @@
         "eslint-plugin-import": "^2.25.0",
         "fork-ts-checker-webpack-plugin": "^7.2.13",
         "node-loader": "^2.0.0",
+        "nodemon": "^3.0.2",
         "style-loader": "^3.0.0",
         "ts-loader": "^9.2.2",
         "ts-node": "^10.0.0",

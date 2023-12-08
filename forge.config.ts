@@ -37,6 +37,9 @@ const config: ForgeConfig = {
                     },
                 ],
             },
+            devServer: {
+                hot: true,
+            },
         }),
     ],
 };
