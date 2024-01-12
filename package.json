@@ -6,7 +6,7 @@
     "main": ".webpack/main",
     "scripts": {
         "start": "nodemon --exec electron-forge start",
-        "package": "export \"LOGIN_TRK=\" electron-forge package",
+        "package": "electron-forge package",
         "make": "electron-forge make",
         "publish": "electron-forge publish",
         "lint": "eslint --ext .ts,.tsx ."
@@ -49,6 +49,7 @@
         "axios": "^1.4.0",
         "dotenv": "^16.3.1",
         "electron-squirrel-startup": "^1.0.0",
+        "electron-store": "^8.1.0",
         "lodash": "^4.17.21",
         "luxon": "^3.3.0",
         "puppeteer": "^19.11.1",

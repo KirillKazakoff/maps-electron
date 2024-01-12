@@ -1,13 +1,15 @@
-import { endpoints } from '../../api/endpoints';
-import { calcARMDateDay, calcARMDate } from '../../utils/calcARMDate';
+import {
+    calcARMDateDay,
+    calcARMDateFromNow,
+    calcARMDateMonth,
+} from '../../utils/calcARMDate';
 import { login } from '../login';
-import { SettingsLoginT } from '../settingsLogin';
+import { SettingsLoginT } from './downloadReports';
 import { downloadXML } from './downloadXML';
 
-export const downloadSSDLast = async (settings: SettingsLoginT) => {
+export const downloadSSDSingle = async (settings: SettingsLoginT) => {
     console.log('START LOADING');
     await login(settings);
-    // const vesselsId = await endpoints.get.vesselsByCompany(settings.companyId);
 
     const date = calcARMDateDay({ start: 7, end: -1 });
 
@@ -18,7 +20,20 @@ export const downloadSSDLast = async (settings: SettingsLoginT) => {
     }
 };
 
-export const downloadSSDAll = async (settings: SettingsLoginT) => {
+export const downloadSSDFromMonthStart = async (settings: SettingsLoginT) => {
+    console.log('START LOADING');
+    await login(settings);
+
+    const date = calcARMDateFromNow();
+
+    for await (const id of settings.vesselsId) {
+        console.log(id);
+        const reportUrl = `https://mon.cfmc.ru/ReportViewer.aspx?Report=34&IsAdaptive=true&VesselShipId=${id}&StartDate=${date.start}&EndDate=${date.end}`;
+        await downloadXML(reportUrl);
+    }
+};
+
+export const downloadSSDMultiple = async (settings: SettingsLoginT) => {
     await login(settings);
     // const vesselsId = await endpoints.get.vesselsByCompany(settings.companyId);
 
@@ -27,7 +42,7 @@ export const downloadSSDAll = async (settings: SettingsLoginT) => {
         for await (const i of numbers) {
             console.log(id, i);
 
-            const date = calcARMDate(i);
+            const date = calcARMDateMonth(i);
             const reportUrl = `https://mon.cfmc.ru/ReportViewer.aspx?Report=34&IsAdaptive=true&VesselShipId=${id}&StartDate=${date.start}&EndDate=${date.end}`;
             await downloadXML(reportUrl);
         }

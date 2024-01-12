@@ -1,6 +1,6 @@
 import { calcARMDateDay } from '../../utils/calcARMDate';
 import { login } from '../login';
-import { SettingsLoginT } from '../settingsLogin';
+import { SettingsLoginT } from '../downloadXML/downloadReports';
 import { downloadXML } from './downloadXML';
 
 export const downloadXMLCoords = async (settings: SettingsLoginT) => {

@@ -1,10 +1,10 @@
 import puppeteer from 'puppeteer';
-import { browser } from './browser';
-import { timePromise } from '../utils/time';
+import { timePromise } from '../../utils/time';
+import { browser } from '../browser';
 import config from '../../config.json';
+import { settingsLogin } from '../../index';
 
-export const settingsLogin = config;
-export type SettingsLoginT = (typeof config)[number];
+export type SettingsLoginT = (typeof config.settings)[number];
 export type SettingsLoginCbT = (settings: SettingsLoginT) => Promise<any>;
 
 export const downloadReports = async (callback: SettingsLoginCbT) => {

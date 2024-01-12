@@ -1,4 +1,4 @@
-import { SettingsLoginT } from '../settingsLogin';
+import { SettingsLoginT } from '../downloadXML/downloadReports';
 import { login } from '../login';
 import { calcARMDateDay } from '../../utils/calcARMDate';
 import { downloadXML } from './downloadXML';

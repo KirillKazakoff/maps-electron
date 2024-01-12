@@ -1,50 +1,55 @@
-import {
-    SettingsLoginCbT,
-    SettingsLoginT,
-    downloadReports,
-} from '../armRequest/settingsLogin';
 import { readXmlSSD } from '../xml/readXmlSSD';
 import { readXmlCoords } from '../xml/readXmlCoords';
-import { endpoints } from './endpoints';
 import { downloadCoords } from '../armRequest/downloadXML/downloadCoords';
 import { login } from '../armRequest/login';
-import { downloadSSDLast, downloadSSDAll } from '../armRequest/downloadXML/downloadSSD';
+import {
+    downloadSSDSingle,
+    downloadSSDMultiple,
+    downloadSSDFromMonthStart,
+} from '../armRequest/downloadXML/downloadSSD';
 import { setFunctionsInPageContext } from '../armRequest/pageParse/setFunctionsInPageContext';
+import {
+    SettingsLoginCbT,
+    downloadReports,
+    SettingsLoginT,
+} from '../armRequest/downloadXML/downloadReports';
+import { endpoints } from './endpoints';
 
-const sendXMLSSD = async () => {
-    const ssdList = readXmlSSD();
-    endpoints.send.ssdInfo(ssdList);
-};
+class Api {
+    async sendXMLSSD() {
+        const ssd = readXmlSSD();
+        endpoints.send.ssdInfo(ssd);
+    }
 
-const sendSSD = async (cb: SettingsLoginCbT) => {
-    await downloadReports(cb);
-    await sendXMLSSD();
-};
+    async downloadSSD(cb: SettingsLoginCbT) {
+        await downloadReports(cb);
+        readXmlSSD();
+    }
 
-const sendCoords = async () => {
-    await downloadReports(downloadCoords);
-    const coordinates = readXmlCoords();
-    endpoints.send.coordinates(coordinates);
-};
+    async downloadSSDFromMonth() {
+        await this.downloadSSD(downloadSSDFromMonthStart);
+    }
+    async downloadSSDSingle() {
+        await this.downloadSSD(downloadSSDSingle);
+    }
+    async downloadSSDAll() {
+        await this.downloadSSD(downloadSSDMultiple);
+    }
 
-const updateZones = async (settings: SettingsLoginT) => {
-    const page = await login(settings);
-    const functions = setFunctionsInPageContext(page);
-    const zones = await functions.fetchZones();
-    endpoints.update.zones(zones);
-};
+    async sendDownloadCoords() {
+        await downloadReports(downloadCoords);
+        const coordinates = readXmlCoords();
 
-const apiInit = () => {
-    return {
-        sendXMLSSD: () => sendXMLSSD(),
-        sendSSDLast: () => {
-            sendSSD(downloadSSDLast);
-        },
-        sendSSDAll: () => sendSSD(downloadSSDAll),
+        endpoints.send.coordinates(coordinates);
+    }
 
-        updateZones: () => updateZones('' as any),
-        sendCoords: () => sendCoords(),
-    };
-};
+    async updateZones(settings: SettingsLoginT) {
+        const page = await login(settings);
+        const functions = setFunctionsInPageContext(page);
+        const zones = await functions.fetchZones();
 
-export const api = apiInit();
+        endpoints.update.zones(zones);
+    }
+}
+
+export const api = new Api();

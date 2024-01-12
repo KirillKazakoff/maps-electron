@@ -1,28 +1,27 @@
 import './index.css';
-import { CheckBoxSettingsT } from './utils/types';
+import { ElectronApi } from './preload';
 
 declare global {
     interface Window {
-        electronAPI: {
-            downloadSSDLast: () => void;
-            downloadSSDAll: () => void;
-            downloadCoords: () => void;
-            sendXMLSSD: () => void;
-
-            sendSettings: (settings: CheckBoxSettingsT) => void;
-        };
+        electronAPI: ElectronApi;
     }
 }
 
-const ssdAllBtn = document.querySelector('.download-all');
-const ssdLastBtn = document.querySelector('.download-last');
-const coordsBtn = document.querySelector('.download-coords');
-const sendXMLSSDBtn = document.querySelector('.sendXMLSSD');
+[
+    'sendXMLSSD',
+    'downloadSSDLast',
+    'downloadSSDFromMonth',
 
-ssdAllBtn.addEventListener('click', () => window.electronAPI.downloadSSDAll());
-ssdLastBtn.addEventListener('click', () => window.electronAPI.downloadSSDLast());
-coordsBtn.addEventListener('click', () => window.electronAPI.downloadCoords());
-sendXMLSSDBtn.addEventListener('click', () => window.electronAPI.sendXMLSSD());
+    'downloadCoords',
+    'downloadSSDAll',
+    'onlyDownload',
+].forEach((action: keyof typeof window.electronAPI.api) => {
+    const btn = document.querySelector('.' + action);
+    const action2 = action;
+    btn.addEventListener('click', () => window.electronAPI.api[action2]());
+});
+
+window.electronAPI.api.getPath().then((res) => console.log(res));
 
 const getSettings = (checkBox: HTMLInputElement) => ({
     name: checkBox.id,
