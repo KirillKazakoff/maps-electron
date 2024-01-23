@@ -9,14 +9,10 @@ export const mainConfig: Configuration = {
      */
     entry: './src/index.ts',
     // Put your normal webpack config below here
-    devServer: {
-        hot: false,
-    },
     module: {
         rules,
     },
     resolve: {
         extensions: ['.js', '.ts', '.jsx', '.tsx', '.css', '.json'],
     },
-
 };

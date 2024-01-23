@@ -4,8 +4,10 @@ import { downloadCoords } from '../armRequest/downloadXML/downloadCoords';
 import { login } from '../armRequest/login';
 import {
     downloadSSDSingle,
-    downloadSSDMultiple,
+    // downloadSSDMultiple,
     downloadSSDFromMonthStart,
+    downloadSSDMonthFull,
+    downloadSSDYear,
 } from '../armRequest/downloadXML/downloadSSD';
 import { setFunctionsInPageContext } from '../armRequest/pageParse/setFunctionsInPageContext';
 import {
@@ -26,15 +28,23 @@ class Api {
         readXmlSSD();
     }
 
+    // XML
     async downloadSSDFromMonth() {
         await this.downloadSSD(downloadSSDFromMonthStart);
     }
+    async downloadSSDMonthFull() {
+        await this.downloadSSD(downloadSSDMonthFull);
+    }
+    async downloadSSDYear() {
+        await this.downloadSSD(downloadSSDYear);
+    }
+
     async downloadSSDSingle() {
         await this.downloadSSD(downloadSSDSingle);
     }
-    async downloadSSDAll() {
-        await this.downloadSSD(downloadSSDMultiple);
-    }
+    // async downloadSSDAll() {
+    //     await this.downloadSSD(downloadSSDMultiple);
+    // }
 
     async sendDownloadCoords() {
         await downloadReports(downloadCoords);

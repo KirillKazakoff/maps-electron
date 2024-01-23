@@ -14,10 +14,20 @@ export const readXmlSSD = () => {
     const ssdInfoArray = initSSDInfo();
     const fileNames = fs.readdirSync(downloadPath, { withFileTypes: true });
 
+    // moveToSSDDirectory
     fileNames.forEach((file) => {
         if (!file.name.includes('xml')) return;
 
         const filePath = `${downloadPath}/${file.name}`;
+        fs.renameSync(filePath, `${downloadPath}/SSD/${file.name}`);
+    });
+
+    const ssdPath = downloadPath + '/SSD';
+    const ssdFileNames = fs.readdirSync(ssdPath, { withFileTypes: true });
+
+    // readSSDAndRename
+    ssdFileNames.forEach((file) => {
+        const filePath = `${ssdPath}${file.name}`;
         const xml = fs.readFileSync(filePath);
 
         let currentSSD: SSDInfo;

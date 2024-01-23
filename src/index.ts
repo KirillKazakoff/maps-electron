@@ -25,7 +25,6 @@ const createWindow = (): void => {
             preload: MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY,
         },
         fullscreen: false,
-        // focusable: false,
         show: false,
     });
 
@@ -33,11 +32,15 @@ const createWindow = (): void => {
     mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
 
     settingsLogin = JSON.parse(fs.readFileSync(configPath).toString()).settings;
+    console.log(settingsLogin);
 
     ipcMain.on('sendXMLSSD', () => api.sendXMLSSD());
     ipcMain.on('downloadSSDLast', () => api.downloadSSDSingle());
-    ipcMain.on('downloadSSDAll', () => api.downloadSSDAll());
+    // ipcMain.on('downloadSSDAll', () => api.downloadSSDAll());
+
     ipcMain.on('downloadSSDFromMonth', () => api.downloadSSDFromMonth());
+    ipcMain.on('downloadSSDMonthFull', () => api.downloadSSDMonthFull());
+    ipcMain.on('downloadSSDYear', () => api.downloadSSDYear());
 
     ipcMain.on('sendSettings', (e, checkBox: CheckBoxSettingsT) => {
         const resetSettings = settingsLogin.find((s) => s.name === checkBox.name);
@@ -47,6 +50,7 @@ const createWindow = (): void => {
 
     ipcMain.on('downloadCoords', () => api.sendDownloadCoords());
     ipcMain.handle('getPath', () => getUserName());
+    ipcMain.handle('getDefaultSettings', () => settingsLogin);
 
     // Open the DevTools.
     mainWindow.webContents.openDevTools();
