@@ -44,6 +44,7 @@ const createWindow = (): void => {
 
     ipcMain.on('sendSettings', (e, checkBox: CheckBoxSettingsT) => {
         const resetSettings = settingsLogin.find((s) => s.name === checkBox.name);
+        if (!resetSettings) return;
         resetSettings.isChecked = checkBox.isChecked;
         console.log(settingsLogin);
     });

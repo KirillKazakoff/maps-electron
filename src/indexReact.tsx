@@ -1,13 +1,14 @@
 import './index.css';
 import { createRoot } from 'react-dom/client';
-import { ElectronApi } from './preload';
+import { ElectronApiT } from './preload';
 import App from './AppReact/App';
+import React from 'react';
 
 declare global {
     interface Window {
-        electronAPI: ElectronApi;
+        electronAPI: ElectronApiT;
     }
 }
 
-const root = createRoot(document.getElementById('app-container'));
+const root = createRoot(document.getElementById('app-container') as HTMLElement);
 root.render(<App />);
