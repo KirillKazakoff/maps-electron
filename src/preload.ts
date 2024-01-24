@@ -8,7 +8,8 @@ const electronApi = {
         downloadSSDFromMonth: () => ipcRenderer.send('downloadSSDFromMonth'),
         downloadSSDMonthFull: () => ipcRenderer.send('downloadSSDMonthFull'),
         downloadSSDYear: () => ipcRenderer.send('downloadSSDYear'),
-        downnloadSSDDate: () => ipcRenderer.send('downnloadSSDDate'),
+        downnloadSSDDate: (date: { start: string; end: string }) =>
+            ipcRenderer.send('downnloadSSDDate', date),
 
         downloadSSDLast: () => ipcRenderer.send('downloadSSDLast'),
 
@@ -25,6 +26,7 @@ const electronApi = {
     },
 };
 
-export type ElectronApi = typeof electronApi;
+export type ElectronApiT = typeof electronApi;
+export type ElectronApiKeys = keyof ElectronApiT['api'];
 
 contextBridge.exposeInMainWorld('electronAPI', electronApi);

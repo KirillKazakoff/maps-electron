@@ -2,7 +2,7 @@ body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial,
         sans-serif;
     margin: auto;
-    max-width: 38rem;
+    max-width: 400px;
     padding: 2rem;
 }
 
@@ -29,4 +29,9 @@ body {
 .downnloadSSDDate {
     margin-top: 20px;
     width: 100%;
+}
+
+.form-date-inputs {
+    display: flex;
+    justify-content: space-between;
 }
