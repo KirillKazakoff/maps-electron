@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-implied-eval */
 import { Page } from 'puppeteer';
 
-import { selectSpan } from './selectSpan';
+import { selectSpanReport, checkLiNoValue } from './selectSpan';
 import { fetchVessels, fetchZones } from '../fetchData/arm';
 
 type UnknownFnT = (...args: any) => any;
@@ -26,7 +26,8 @@ export const setFunctionsInPageContext = (page: Page) => {
     }
 
     const functions = {
-        selectSpan: evaluator(selectSpan),
+        checkLiNoValue: evaluator(checkLiNoValue),
+        selectSpan: evaluator(selectSpanReport),
         fetchVessels: evaluator(fetchVessels),
         fetchZones: evaluator(fetchZones),
     };

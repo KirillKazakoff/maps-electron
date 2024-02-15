@@ -1,6 +1,6 @@
-import settingsStore from './AppReact/stores/settingsStore';
+import settingsStore from './UI/stores/settingsStore';
 import { SettingsLoginT } from './armRequest/downloadXML/downloadReports';
-import './indexReact';
+import './UI/indexReact';
 
 const renderer = async () => {
     const settingsDefault =

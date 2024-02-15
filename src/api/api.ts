@@ -1,65 +1,37 @@
-import { readXmlSSD } from '../xml/readXmlSSD';
-import { readXmlCoords } from '../xml/readXmlCoords';
-import { downloadCoords } from '../armRequest/downloadXML/downloadCoords';
-import { login } from '../armRequest/login';
-import {
-    downloadSSDSingle,
-    // downloadSSDMultiple,
-    downloadSSDFromMonthStart,
-    downloadSSDMonthFull,
-    downloadSSDYear,
-} from '../armRequest/downloadXML/downloadSSD';
-import { setFunctionsInPageContext } from '../armRequest/pageParse/setFunctionsInPageContext';
-import {
-    SettingsLoginCbT,
-    downloadReports,
-    SettingsLoginT,
-} from '../armRequest/downloadXML/downloadReports';
-import { endpoints } from './endpoints';
+import { Coordinates, Vessel } from './models';
+import { SSDInfo } from '../xml/parseReportSSD/parseReportSSD';
+import axios from 'axios';
 
-class Api {
-    async sendXMLSSD() {
-        const ssd = readXmlSSD();
-        endpoints.send.ssdInfo(ssd);
-    }
+const baseUrl = 'http://localhost:9092';
 
-    async downloadSSD(cb: SettingsLoginCbT) {
-        await downloadReports(cb);
-        readXmlSSD();
-    }
+const updateZones = async (data: unknown) => {
+    await axios.post(`${baseUrl}/zones`, data);
+};
+const sendSSDInfo = async (data: SSDInfo) => {
+    await axios.post(`${baseUrl}/ssd`, data);
+};
+const sendCoordinates = async (data: Coordinates[]) => {
+    await axios.post(`${baseUrl}/coordinates`, data);
+};
+const getVesselById = async (id: string) => {
+    const res = await axios.get<Vessel>(`${baseUrl}/vesselsById/${id}`);
+    return res.data;
+};
+const getVesselsByCompanyId = async (companyId: string) => {
+    const res = await axios.get<Vessel[]>(`${baseUrl}/vessels/${companyId}`);
+    return res.data.map((vessel) => vessel.id);
+};
 
-    // XML
-    async downloadSSDFromMonth() {
-        await this.downloadSSD(downloadSSDFromMonthStart);
-    }
-    async downloadSSDMonthFull() {
-        await this.downloadSSD(downloadSSDMonthFull);
-    }
-    async downloadSSDYear() {
-        await this.downloadSSD(downloadSSDYear);
-    }
-
-    async downloadSSDSingle() {
-        await this.downloadSSD(downloadSSDSingle);
-    }
-    // async downloadSSDAll() {
-    //     await this.downloadSSD(downloadSSDMultiple);
-    // }
-
-    async sendDownloadCoords() {
-        await downloadReports(downloadCoords);
-        const coordinates = readXmlCoords();
-
-        endpoints.send.coordinates(coordinates);
-    }
-
-    async updateZones(settings: SettingsLoginT) {
-        const page = await login(settings);
-        const functions = setFunctionsInPageContext(page);
-        const zones = await functions.fetchZones();
-
-        endpoints.update.zones(zones);
-    }
-}
-
-export const api = new Api();
+export const api = {
+    update: {
+        zones: updateZones,
+    },
+    send: {
+        ssdInfo: sendSSDInfo,
+        coordinates: sendCoordinates,
+    },
+    get: {
+        vesselsByCompany: getVesselsByCompanyId,
+        vessel: getVesselById,
+    },
+};

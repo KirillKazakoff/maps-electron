@@ -1,7 +1,7 @@
-import './index.css';
+import '../index.css';
 import { createRoot } from 'react-dom/client';
-import { ElectronApiT } from './preload';
-import App from './AppReact/App';
+import { ElectronApiT } from '../preload';
+import { App } from './App';
 import React from 'react';
 
 declare global {

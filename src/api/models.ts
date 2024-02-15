@@ -9,6 +9,7 @@ export type Vessel = {
 export type SSD = {
     id: string;
     date: string;
+    vessel_name: string;
     vessel_id: string;
     company_id: string;
     agreement_no: string;

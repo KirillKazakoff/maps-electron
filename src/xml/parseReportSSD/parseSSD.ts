@@ -9,9 +9,11 @@ export type SSDReportT =
 export const parseSSD = (ssd: SSDReportT) => {
     const header = ssd.Textbox33[0];
     const headerSpaced = header.split(' ');
-
     const date = headerSpaced[0];
     const vessel_id = header.split(rgBracket)[1];
+
+    const name = header.split(rgBracket)[0].substring(10, 100).trim();
+
     const id = date + vessel_id;
 
     const agreementStr = headerSpaced[headerSpaced.indexOf('№') + 1].split('\r\n');
@@ -42,6 +44,7 @@ export const parseSSD = (ssd: SSDReportT) => {
     const ssdParsed: SSD = {
         id,
         date,
+        vessel_name: name,
         vessel_id,
         company_id,
         agreement_no,

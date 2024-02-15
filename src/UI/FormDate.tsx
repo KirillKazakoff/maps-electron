@@ -3,7 +3,9 @@ import settingsStore, { FormDateT } from './stores/settingsStore';
 import { observer } from 'mobx-react-lite';
 import ButtonAction from './ButtonAction';
 
-export const FormDate = observer(() => {
+type PropsT = { date: FormDateT };
+
+export const FormDate = observer(({ date }: PropsT) => {
     const onChange =
         (position: keyof FormDateT) => (e: React.SyntheticEvent<HTMLInputElement>) => {
             settingsStore.setDate(position, e.currentTarget.value);
@@ -27,7 +29,7 @@ export const FormDate = observer(() => {
                 />
             </div>
 
-            <ButtonAction id="downnloadSSDDate" params={[settingsStore.date]}>
+            <ButtonAction id="downnloadSSDDate" params={[date]}>
                 Загрузить по дате
             </ButtonAction>
         </form>

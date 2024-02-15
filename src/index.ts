@@ -1,10 +1,12 @@
 import { app, BrowserWindow, ipcMain } from 'electron';
 import { setLoggingTrace } from './utils/log';
-import { api } from './api/api';
 import { CheckBoxSettingsT } from './utils/types';
-import { getUserName } from './fsModule/getUserName';
+import { getUserName } from './fsModule/fsUtils';
 import config from './config.json';
 import fs from 'fs';
+import { FormDateT } from './UI/stores/settingsStore';
+import { downloadSSD } from './xml/downloadSSD';
+import { readXmlSSD } from './xml/readXmlSSD';
 
 declare const MAIN_WINDOW_WEBPACK_ENTRY: string;
 declare const MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY: string;
@@ -32,15 +34,10 @@ const createWindow = (): void => {
     mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
 
     settingsLogin = JSON.parse(fs.readFileSync(configPath).toString()).settings;
-    console.log(settingsLogin);
 
-    ipcMain.on('sendXMLSSD', () => api.sendXMLSSD());
-    ipcMain.on('downloadSSDLast', () => api.downloadSSDSingle());
-    // ipcMain.on('downloadSSDAll', () => api.downloadSSDAll());
-
-    ipcMain.on('downloadSSDFromMonth', () => api.downloadSSDFromMonth());
-    ipcMain.on('downloadSSDMonthFull', () => api.downloadSSDMonthFull());
-    ipcMain.on('downloadSSDYear', () => api.downloadSSDYear());
+    ipcMain.on('downloadSSDDate', (e, date: FormDateT) => {
+        downloadSSD(date);
+    });
 
     ipcMain.on('sendSettings', (e, checkBox: CheckBoxSettingsT) => {
         const resetSettings = settingsLogin.find((s) => s.name === checkBox.name);
@@ -49,9 +46,11 @@ const createWindow = (): void => {
         console.log(settingsLogin);
     });
 
-    ipcMain.on('downloadCoords', () => api.sendDownloadCoords());
     ipcMain.handle('getPath', () => getUserName());
     ipcMain.handle('getDefaultSettings', () => settingsLogin);
+
+    // debug requests
+    ipcMain.on('sendXMLSSD', () => readXmlSSD());
 
     // Open the DevTools.
     mainWindow.webContents.openDevTools();

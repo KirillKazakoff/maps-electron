@@ -1,5 +1,6 @@
 import React from 'react';
 import { ElectronApiT } from '../preload';
+import _ from 'lodash';
 
 type ElKeysT = keyof ElectronApiT['api'];
 
@@ -11,7 +12,8 @@ type PropsT<T extends ElKeysT> = {
 
 export default function ButtonAction<T extends ElKeysT>({ id, children, params }: PropsT<T>) {
     const onClick = () => {
-        window.electronAPI.api[id].apply(null, params);
+        const clone = _.cloneDeep(params);
+        window.electronAPI.api[id].apply(null, clone);
     };
 
     return (

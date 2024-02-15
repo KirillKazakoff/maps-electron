@@ -1,21 +1,17 @@
 import { contextBridge, ipcRenderer } from 'electron';
 import { CheckBoxSettingsT } from './utils/types';
+import { FormDateT } from './UI/stores/settingsStore';
 
 const electronApi = {
     api: {
+        // sendToNode
+        downloadSSDFromMonth: (date: FormDateT) =>
+            ipcRenderer.send('downloadSSDFromMonth', date),
+        downnloadSSDDate: (date: FormDateT) => {
+            ipcRenderer.send('downloadSSDDate', date);
+        },
+
         sendXMLSSD: () => ipcRenderer.send('sendXMLSSD'),
-
-        downloadSSDFromMonth: () => ipcRenderer.send('downloadSSDFromMonth'),
-        downloadSSDMonthFull: () => ipcRenderer.send('downloadSSDMonthFull'),
-        downloadSSDYear: () => ipcRenderer.send('downloadSSDYear'),
-        downnloadSSDDate: (date: { start: string; end: string }) =>
-            ipcRenderer.send('downnloadSSDDate', date),
-
-        downloadSSDLast: () => ipcRenderer.send('downloadSSDLast'),
-
-        downloadSSDAll: () => ipcRenderer.send('downloadSSDAll'),
-        downloadCoords: () => ipcRenderer.send('downloadCoords'),
-        onlyDownload: () => ipcRenderer.send('onlyDownload'),
 
         // sendToRenderer
         getPath: () => ipcRenderer.invoke('getPath'),

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import settingsStore from './stores/settingsStore';
 import { observer } from 'mobx-react-lite';
+import _ from 'lodash';
 
 type PropsT = { id: string; title: string };
 
@@ -15,7 +16,13 @@ export const Checkbox = observer(({ id, title }: PropsT) => {
 
     if (!settings) return;
 
-    const onChange = () => setChecked(!isChecked);
+    const onChange = () => {
+        const cloneSettings = _.cloneDeep(settings);
+        cloneSettings.isChecked = !isChecked;
+        window.electronAPI.sendSettings(cloneSettings);
+
+        setChecked(!isChecked);
+    };
 
     return (
         <div className="checkbox-row">

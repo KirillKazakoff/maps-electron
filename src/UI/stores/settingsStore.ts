@@ -19,7 +19,6 @@ class SettingsStore {
     setSettings(settings: SettingsLoginT[]) {
         this.settings = settings;
     }
-
     setDate(position: keyof FormDateT, value: string) {
         this.date[position] = value;
     }
