@@ -22,12 +22,15 @@ export async function login(settings: SettingsLoginT) {
         }, settings);
 
         await page.click('button.btn-danger');
-        await timePromise(2000);
+        await timePromise(5000);
 
         const url = page.url();
         console.log(url);
 
-        if (url === 'https://osm.gov.ru/fishery/loginRedirect') {
+        if (
+            url === 'https://osm.gov.ru/fishery/loginRedirect' ||
+            url === 'https://osm.gov.ru/portal/wicket/page?13'
+        ) {
             await page.evaluate((s) => {
                 const inputs = {
                     login: <HTMLInputElement>document.getElementById('id3'),

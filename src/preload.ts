@@ -5,9 +5,7 @@ import { FormDateT } from './UI/stores/settingsStore';
 const electronApi = {
     api: {
         // sendToNode
-        downloadSSDFromMonth: (date: FormDateT) =>
-            ipcRenderer.send('downloadSSDFromMonth', date),
-        downnloadSSDDate: (date: FormDateT) => {
+        downloadSSDDate: (date: FormDateT) => {
             ipcRenderer.send('downloadSSDDate', date);
         },
 

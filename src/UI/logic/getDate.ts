@@ -28,6 +28,12 @@ export const getDateObj = () => {
                 end: now.toFormat(toFormat),
             };
         },
+        fromYearStart: () => {
+            return {
+                start: now.startOf('year').toFormat(toFormat),
+                end: now.toFormat(toFormat),
+            };
+        },
         fromDatePicker: () => {
             const { start, end } = settingsStore.date;
             const dateTimeStart = DateTime.fromFormat(start, fromFormat);

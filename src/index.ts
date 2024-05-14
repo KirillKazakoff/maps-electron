@@ -1,3 +1,4 @@
+/* eslint-disable prefer-const */
 import { app, BrowserWindow, ipcMain } from 'electron';
 import { setLoggingTrace } from './utils/log';
 import { CheckBoxSettingsT } from './utils/types';
@@ -7,13 +8,21 @@ import fs from 'fs';
 import { FormDateT } from './UI/stores/settingsStore';
 import { downloadSSD } from './xml/downloadSSD';
 import { readXmlSSD } from './xml/readXmlSSD';
+import { script } from './script';
 
 declare const MAIN_WINDOW_WEBPACK_ENTRY: string;
 declare const MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY: string;
 
 const configPath = `/Users/${getUserName()}/Library/Mobile Documents/com~apple~CloudDocs/Конспираторы/ОВЭД/БД Производство/0_Аналитика ССД/Конфигурация/config.json`;
 
+console.log(__dirname);
+
 export let settingsLogin: typeof config.settings;
+
+// if (__dirname.includes('username')) {
+// settingsLogin = JSON.parse(fs.readFileSync(configPath).toString()).settings;
+// script()
+// }
 
 if (require('electron-squirrel-startup')) {
     app.quit();

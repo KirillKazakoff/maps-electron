@@ -29,8 +29,10 @@ export type SSDInfo = ReturnType<typeof initSSDInfo>;
 export const parseReportSSD = (report: ReportT) => {
     const parsedObj = initSSDInfo();
 
+    if (!report?.Report?.Tablix1) return null;
     const { SSD_DATE_Collection } = report.Report.Tablix1[0];
     if (!SSD_DATE_Collection) return null;
+
     const { SSD_DATE } = SSD_DATE_Collection[0];
 
     const reports = SSD_DATE.reduce<SSDInfo>((total, ssdJson) => {

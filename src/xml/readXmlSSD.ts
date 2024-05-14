@@ -27,8 +27,6 @@ export const readXmlSSD = () => {
         withFileTypes: true,
     });
 
-    console.log(ssdFileNames);
-
     // readSSDAndRename
     ssdFileNames.forEach((file) => {
         if (!file.name.includes('xml')) return;
@@ -38,7 +36,10 @@ export const readXmlSSD = () => {
 
         let currentSSD: SSDInfo | null = null;
         xml2js.parseString(xml, { mergeAttrs: true }, (err, result: ReportT) => {
-            if (err) throw err;
+            if (err) {
+                console.log(err);
+                return;
+            }
 
             const ssdInfo = parseReportSSD(result);
             currentSSD = ssdInfo;

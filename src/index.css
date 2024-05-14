@@ -35,3 +35,8 @@ body {
     display: flex;
     justify-content: space-between;
 }
+
+.form-date-btn {
+    margin-top: 10px;
+    width: 100%;
+}

@@ -38,7 +38,7 @@ export const downloadXML = async (url: string) => {
         console.log(e.message);
 
         if (e.message.includes('Отсутствует значение параметра')) {
-            console.log('HHHHA');
+            console.log('No param found');
             return false;
         }
         if (browser.instance) {

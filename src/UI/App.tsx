@@ -20,10 +20,14 @@ export const App = observer(() => {
             </form>
 
             <div className="rest-controllers rest-first-stage">
-                <ButtonAction id="downnloadSSDDate" params={[dateObj.fromLastMonth()]}>
+                <ButtonAction id="sendXMLSSD">Переименовать ССД ФС</ButtonAction>
+                <ButtonAction id="downloadSSDDate" params={[dateObj.fromLastMonth()]}>
                     Загрузить с начала месяца
                 </ButtonAction>
-                <ButtonAction id="sendXMLSSD">Переименовать ССД ФС</ButtonAction>
+                <ButtonAction params={[dateObj.fromYearStart()]} id="downloadSSDDate">
+                    Загрузить с начала года
+                </ButtonAction>
+
                 <FormDate date={dateObj.fromDatePicker()} />
             </div>
         </div>
