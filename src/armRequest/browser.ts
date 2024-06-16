@@ -1,4 +1,5 @@
-import puppeteer, { Browser } from 'puppeteer';
+import puppeteer from 'puppeteer-extra';
+import { Browser } from 'puppeteer';
 
 class BrowserC {
     instance: Browser | null;

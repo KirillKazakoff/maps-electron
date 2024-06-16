@@ -18,5 +18,5 @@ export const downloadSSD = async (date: FormDateT) => {
     await downloadReports(cb);
     readXmlSSD();
 
-    console.log('ssd have been read and sent to directory');
+    console.log('ssd have been read and sent to dËËirectory');
 };
