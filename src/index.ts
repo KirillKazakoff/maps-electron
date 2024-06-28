@@ -12,8 +12,6 @@ import { bot } from './telegramBot/bot';
 import nodeCron from 'node-cron';
 import { updateElectronApp } from 'update-electron-app';
 
-updateElectronApp({ notifyUser: true });
-
 declare const MAIN_WINDOW_WEBPACK_ENTRY: string;
 declare const MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY: string;
 
@@ -28,6 +26,7 @@ if (require('electron-squirrel-startup')) {
 }
 
 const createWindow = (): void => {
+    updateElectronApp({ notifyUser: true });
     setLoggingTrace();
     // Create the browser window.
     const mainWindow = new BrowserWindow({
