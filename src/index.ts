@@ -2,27 +2,26 @@
 import { app, BrowserWindow, ipcMain } from 'electron';
 import { setLoggingTrace } from './utils/log';
 import { CheckBoxSettingsT } from './utils/types';
-import { getUserName } from './fsModule/fsUtils';
-import config from './config.json';
+import config from '../config.json';
 import fs from 'fs';
 import { FormDateT } from './UI/stores/settingsStore';
 import { downloadSSD } from './xml/downloadSSD';
 import { readXmlSSD } from './xml/readXmlSSD';
-import { script } from './script';
+import { getDateObj } from './UI/logic/getDate';
+import { bot } from './telegramBot/bot';
+import nodeCron from 'node-cron';
+import { updateElectronApp } from 'update-electron-app';
+
+updateElectronApp({ notifyUser: true });
 
 declare const MAIN_WINDOW_WEBPACK_ENTRY: string;
 declare const MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY: string;
 
-const configPath = `/Users/${getUserName()}/Library/Mobile Documents/com~apple~CloudDocs/Конспираторы/ОВЭД/БД Производство/0_Аналитика ССД/Конфигурация/config.json`;
-
-console.log(__dirname);
+// prettier-ignore
+const configPath =
+    'C:\\Users\\admin\\iCloudDrive\\Конспираторы\\ОВЭД\\БД Производство\\0_Аналитика ССД\\Конфигурация\\config.json';
 
 export let settingsLogin: typeof config.settings;
-
-// if (__dirname.includes('username')) {
-// settingsLogin = JSON.parse(fs.readFileSync(configPath).toString()).settings;
-// script()
-// }
 
 if (require('electron-squirrel-startup')) {
     app.quit();
@@ -47,28 +46,40 @@ const createWindow = (): void => {
     ipcMain.on('downloadSSDDate', (e, date: FormDateT) => {
         downloadSSD(date);
     });
-
     ipcMain.on('sendSettings', (e, checkBox: CheckBoxSettingsT) => {
         const resetSettings = settingsLogin.find((s) => s.name === checkBox.name);
         if (!resetSettings) return;
+
         resetSettings.isChecked = checkBox.isChecked;
-        console.log(settingsLogin);
+    });
+    ipcMain.on('sendXMLSSD', () => readXmlSSD());
+
+    // let task: nodeCron.ScheduledTask;
+    const cbPlanner = () => {
+        downloadSSD(getDateObj().fromYearStart());
+        bot.sendAll('Planner SSD started');
+    };
+    ipcMain.on('sendManual', () => cbPlanner());
+    ipcMain.on('sendPlanner', (e, schedule) => {
+        console.log(schedule);
+        nodeCron.getTasks().forEach((t) => t.stop());
+        nodeCron.schedule(schedule, cbPlanner);
     });
 
-    ipcMain.handle('getPath', () => getUserName());
     ipcMain.handle('getDefaultSettings', () => settingsLogin);
-
-    // debug requests
-    ipcMain.on('sendXMLSSD', () => readXmlSSD());
 
     // Open the DevTools.
     mainWindow.webContents.openDevTools();
-
     setTimeout(() => mainWindow.showInactive());
 };
 
 app.on('ready', createWindow);
 
-app.on('window-all-closed', () => {
+app.on('window-all-closed', async () => {
+    bot.sendAll('closed');
+
+    await new Promise((res) => {
+        setTimeout(() => res('done'), 5000);
+    });
     app.quit();
 });

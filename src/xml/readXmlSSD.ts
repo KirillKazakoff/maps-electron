@@ -19,7 +19,7 @@ export const readXmlSSD = () => {
     fileNames.forEach((file) => {
         if (!file.name.includes('xml')) return;
 
-        const filePath = `${xmlPathes.downloads}/${file.name}`;
+        const filePath = `${xmlPathes.downloads}\\${file.name}`;
         fs.renameSync(filePath, `${xmlPathes.downloadsSSD}${file.name}`);
     });
 
@@ -45,8 +45,10 @@ export const readXmlSSD = () => {
             currentSSD = ssdInfo;
 
             if (!ssdInfo) return;
-            if (ssdInfo.ssd.some((s) => ssdInfoArray.ssd.some((ssd) => ssd.id === s.id)))
-                return;
+            // prettier-ignore
+            if (ssdInfo.ssd.some((s) => {
+                return ssdInfoArray.ssd.some((ssd) => ssd.vessel_id === s.vessel_id);
+            })) return;
 
             ssdInfoArray.ssd.push(...ssdInfo.ssd);
             ssdInfoArray.productionDetails.push(...ssdInfo.productionDetails);
@@ -57,9 +59,7 @@ export const readXmlSSD = () => {
         });
 
         if (!currentSSD) {
-            fs.unlink(filePath, (err) => {
-                if (err) console.log(err);
-            });
+            fs.unlinkSync(filePath);
             return;
         }
 
@@ -68,5 +68,7 @@ export const readXmlSSD = () => {
         renameXML(currentSSD.ssd, filePath);
     });
 
+    console.log('ssd have been read and sent to directory');
+    // console.log(ssdInfoArray.ssd);
     return ssdInfoArray;
 };

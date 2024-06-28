@@ -31,12 +31,12 @@ body {
     width: 100%;
 }
 
-.form-date-inputs {
+.form-inputs {
     display: flex;
     justify-content: space-between;
 }
 
-.form-date-btn {
+.form-btn {
     margin-top: 10px;
     width: 100%;
 }

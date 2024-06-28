@@ -4,6 +4,7 @@ import { FormDate } from './FormDate';
 import { Checkbox } from './CheckBox';
 import { getDateObj } from './logic/getDate';
 import { observer } from 'mobx-react-lite';
+import { FormInput } from './FormInput';
 
 export const App = observer(() => {
     const dateObj = getDateObj();
@@ -12,23 +13,17 @@ export const App = observer(() => {
         <div>
             <h1>Загрузить</h1>
             <form className="form">
-                <Checkbox id="msi" title="МСИ" />
-                <Checkbox id="trk" title="ТРК" />
-                <Checkbox id="tranzit" title="МСИ Транзит" />
-                <Checkbox id="dv" title="Дальневосточное побережье" />
-                <Checkbox id="others" title="Другие" />
+                <Checkbox id="company" title="Компания" />
+                <Checkbox id="liveCrab" title="Живой краб" />
             </form>
 
             <div className="rest-controllers rest-first-stage">
                 <ButtonAction id="sendXMLSSD">Переименовать ССД ФС</ButtonAction>
-                <ButtonAction id="downloadSSDDate" params={[dateObj.fromLastMonth()]}>
-                    Загрузить с начала месяца
-                </ButtonAction>
-                <ButtonAction params={[dateObj.fromYearStart()]} id="downloadSSDDate">
-                    Загрузить с начала года
-                </ButtonAction>
+                <ButtonAction id="sendManual">Запустить задачу вручную</ButtonAction>
+                <ButtonAction id="sendManual">KNOPKA</ButtonAction>
 
                 <FormDate date={dateObj.fromDatePicker()} />
+                <FormInput />
             </div>
         </div>
     );

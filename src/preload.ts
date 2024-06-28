@@ -8,8 +8,9 @@ const electronApi = {
         downloadSSDDate: (date: FormDateT) => {
             ipcRenderer.send('downloadSSDDate', date);
         },
-
         sendXMLSSD: () => ipcRenderer.send('sendXMLSSD'),
+        sendPlanner: (schedule: string) => ipcRenderer.send('sendPlanner', schedule),
+        sendManual: () => ipcRenderer.send('sendManual'),
 
         // sendToRenderer
         getPath: () => ipcRenderer.invoke('getPath'),

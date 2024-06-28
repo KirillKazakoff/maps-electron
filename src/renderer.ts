@@ -1,6 +1,6 @@
 import settingsStore from './UI/stores/settingsStore';
-import { SettingsLoginT } from './armRequest/downloadXML/downloadReports';
 import './UI/indexReact';
+import { SettingsLoginT } from './xml/downloadSSD';
 
 const renderer = async () => {
     const settingsDefault =

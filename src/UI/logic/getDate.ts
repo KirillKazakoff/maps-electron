@@ -15,7 +15,7 @@ export const getDateObj = () => {
         },
         day: () => {
             const start = 7;
-            const end = -1;
+            const end = 0;
 
             return {
                 start: now.minus({ day: start }).toFormat(toFormat),

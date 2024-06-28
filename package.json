@@ -1,9 +1,12 @@
 {
     "name": "my-new-app",
     "productName": "my-new-app",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "description": "My Electron application description",
     "main": ".webpack/main",
+    "repository": {
+        "url": "https://github.com/KirillKazakoff/maps-electron"
+    },
     "scripts": {
         "start": "nodemon --exec electron-forge start",
         "package": "electron-forge package",
@@ -53,19 +56,26 @@
     },
     "dependencies": {
         "@babel/cli": "^7.15.7",
+        "@types/node-cron": "^3.0.11",
+        "@types/node-telegram-bot-api": "^0.64.7",
         "axios": "^1.4.0",
         "dotenv": "^16.3.1",
         "electron-squirrel-startup": "^1.0.0",
         "electron-store": "^8.1.0",
+        "exit-hook": "^4.0.0",
         "lodash": "^4.17.21",
         "luxon": "^3.3.0",
         "mobx": "^6.12.0",
         "mobx-react-lite": "^4.0.5",
+        "move-file": "^3.1.0",
+        "node-cron": "^3.0.3",
+        "node-telegram-bot-api": "^0.66.0",
         "puppeteer": "^19.11.1",
         "puppeteer-extra": "^3.3.6",
         "puppeteer-extra-plugin-stealth": "^2.11.2",
         "react": "^18.2.0",
         "react-dom": "^18.2.0",
+        "update-electron-app": "^3.0.0",
         "xml2js": "^0.5.0"
     }
 }

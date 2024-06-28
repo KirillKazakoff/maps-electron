@@ -6,7 +6,11 @@ class BrowserC {
 
     async launch() {
         if (!this.instance) return;
-        this.instance = await puppeteer.launch({ devtools: true, headless: false });
+        this.instance = await puppeteer.launch({
+            devtools: true,
+            headless: false,
+            protocolTimeout: 240000,
+        });
         this.instance.on('disconnected', () => (this.instance = null));
     }
 

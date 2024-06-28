@@ -3,6 +3,7 @@ export const setLoggingTrace = () => {
     ['log', 'warn', 'error'].forEach((methodName) => {
         const myConsole = console as any;
         const originalMethod = myConsole[methodName];
+
         myConsole[methodName] = (...args: any) => {
             let initiator = 'unknown place';
             try {
