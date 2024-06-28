@@ -20,7 +20,6 @@ export const App = observer(() => {
             <div className="rest-controllers rest-first-stage">
                 <ButtonAction id="sendXMLSSD">Переименовать ССД ФС</ButtonAction>
                 <ButtonAction id="sendManual">Запустить задачу вручную</ButtonAction>
-                <ButtonAction id="sendManual">KNOPKA</ButtonAction>
 
                 <FormDate date={dateObj.fromDatePicker()} />
                 <FormInput />
