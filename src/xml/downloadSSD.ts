@@ -1,22 +1,26 @@
 import puppeteer from 'puppeteer';
-import { settingsLogin } from '../index';
 import { browser } from '../armRequest/browser';
 import { timePromise } from '../utils/time';
 import { FormDateT } from '../UI/stores/settingsStore';
 import { downloadXML } from '../armRequest/downloadXML/downloadXML';
 import { login } from '../armRequest/login';
-import { readXmlSSD } from './readXmlSSD';
-import config from '../../config.json';
+import { moveXMLToCloud } from './moveXmlToCloud';
+import { settingsLogin } from '../index';
 import { bot } from '../telegramBot/bot';
+import { SettingsLoginT } from '../utils/types';
+import { sendInfoBot } from './sendInfoBot';
 
-export type SettingsLoginT = (typeof config.settings)[number];
-export type SettingsLoginCbT = (settings: SettingsLoginT) => Promise<any>;
+export type SettingsLoginCbT = (settings: SettingsLoginT[]) => Promise<any>;
 
 export const downloadSSD = async (date: FormDateT) => {
     const timers: NodeJS.Timer[] = [];
 
+    let vesselsInit: string[] = [];
+
     for await (const settings of settingsLogin) {
         if (!settings.isChecked) continue;
+        console.log(settings.vesselsId);
+        vesselsInit = [...settings.vesselsId];
 
         browser.instance = await puppeteer.launch({ devtools: true, headless: false });
         await login(settings);
@@ -55,8 +59,13 @@ export const downloadSSD = async (date: FormDateT) => {
         }
 
         await clearCb();
+        settings.vesselsId = vesselsInit;
     }
 
-    readXmlSSD();
+    const ssdArray = moveXMLToCloud();
+
+    console.log('here');
+    sendInfoBot(ssdArray);
+
     bot.sendSSDLog('SSD uploaded successfuly');
 };

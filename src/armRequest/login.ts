@@ -1,5 +1,5 @@
 import { timePromise } from '../utils/time';
-import { SettingsLoginT } from '../xml/downloadSSD';
+import { SettingsLoginT } from '../utils/types';
 import { browser } from './browser';
 
 export async function login(settings: SettingsLoginT) {

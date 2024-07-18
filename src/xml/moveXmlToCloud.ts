@@ -8,20 +8,13 @@ import {
 } from './parseReportSSD/parseReportSSD';
 import { getXMLDirPath } from '../fsModule/fsUtils';
 import { renameXML } from '../fsModule/renameXML';
+import { moveXMLToDownloadsDir } from './moveXMLToDownloadsDir';
 
 const xmlPathes = getXMLDirPath();
 
-export const readXmlSSD = () => {
-    const ssdInfoArray = initSSDInfo();
-    const fileNames = fs.readdirSync(xmlPathes.downloads, { withFileTypes: true });
-
-    // moveToSSDDirectory
-    fileNames.forEach((file) => {
-        if (!file.name.includes('xml')) return;
-
-        const filePath = `${xmlPathes.downloads}\\${file.name}`;
-        fs.renameSync(filePath, `${xmlPathes.downloadsSSD}${file.name}`);
-    });
+export const moveXMLToCloud = () => {
+    moveXMLToDownloadsDir();
+    const ssdArray = initSSDInfo();
 
     const ssdFileNames = fs.readdirSync(`${xmlPathes.downloadsSSD}`, {
         withFileTypes: true,
@@ -47,15 +40,15 @@ export const readXmlSSD = () => {
             if (!ssdInfo) return;
             // prettier-ignore
             if (ssdInfo.ssd.some((s) => {
-                return ssdInfoArray.ssd.some((ssd) => ssd.vessel_id === s.vessel_id);
+                return ssdArray.ssd.some((ssd) => ssd.vessel_id === s.vessel_id);
             })) return;
 
-            ssdInfoArray.ssd.push(...ssdInfo.ssd);
-            ssdInfoArray.productionDetails.push(...ssdInfo.productionDetails);
-            ssdInfoArray.productionInput.push(...ssdInfo.productionInput);
-            ssdInfoArray.productionTransport.push(...ssdInfo.productionTransport);
-            ssdInfoArray.reserve.push(...ssdInfo.reserve);
-            ssdInfoArray.bait.push(...ssdInfo.bait);
+            ssdArray.ssd.push(...ssdInfo.ssd);
+            ssdArray.productionDetails.push(...ssdInfo.productionDetails);
+            ssdArray.productionInput.push(...ssdInfo.productionInput);
+            ssdArray.productionTransport.push(...ssdInfo.productionTransport);
+            ssdArray.reserve.push(...ssdInfo.reserve);
+            ssdArray.bait.push(...ssdInfo.bait);
         });
 
         if (!currentSSD) {
@@ -68,7 +61,7 @@ export const readXmlSSD = () => {
         renameXML(currentSSD.ssd, filePath);
     });
 
-    console.log('ssd have been read and sent to directory');
-    // console.log(ssdInfoArray.ssd);
-    return ssdInfoArray;
+    console.log('ssd have been sent to the Cloud');
+
+    return ssdArray;
 };

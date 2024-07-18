@@ -23,6 +23,7 @@ export const initSSDInfo = () => ({
     productionTransport: <ProductionTransport[]>[],
     reserve: <Reserve[]>[],
     bait: <Bait[]>[],
+    fileName: '',
 });
 export type SSDInfo = ReturnType<typeof initSSDInfo>;
 

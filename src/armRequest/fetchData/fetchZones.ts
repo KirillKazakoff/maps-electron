@@ -1,4 +1,4 @@
-import { SettingsLoginT } from '../../xml/downloadSSD';
+import { SettingsLoginT } from '../../utils/types';
 import { login } from '../login';
 import { setFunctionsInPageContext } from '../pageParse/setFunctionsInPageContext';
 

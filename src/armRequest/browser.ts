@@ -10,6 +10,7 @@ class BrowserC {
             devtools: true,
             headless: false,
             protocolTimeout: 240000,
+            timeout: 100000,
         });
         this.instance.on('disconnected', () => (this.instance = null));
     }

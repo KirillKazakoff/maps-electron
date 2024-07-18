@@ -60,3 +60,9 @@ export type Coordinates = {
     course: number;
     velocity: number;
 };
+
+export type SSDObjectedT = {
+    ssdInfo: SSD;
+    input: ProductionInput[];
+    details: ProductionDetails[];
+};

@@ -1,31 +1,56 @@
 /* eslint-disable prefer-const */
 import { app, BrowserWindow, ipcMain } from 'electron';
 import { setLoggingTrace } from './utils/log';
-import { CheckBoxSettingsT } from './utils/types';
-import config from '../config.json';
+import { CheckBoxSettingsT, ConfigT } from './utils/types';
 import fs from 'fs';
 import { FormDateT } from './UI/stores/settingsStore';
 import { downloadSSD } from './xml/downloadSSD';
-import { readXmlSSD } from './xml/readXmlSSD';
+import { moveXMLToCloud } from './xml/moveXmlToCloud';
 import { getDateObj } from './UI/logic/getDate';
 import { bot } from './telegramBot/bot';
 import nodeCron from 'node-cron';
 import { updateElectronApp } from 'update-electron-app';
+import { configUrl } from './fsModule/fsUtils';
+import { sendInfoBot } from './xml/sendInfoBot';
+import _ from 'lodash';
+import child_process from 'child_process';
 
 declare const MAIN_WINDOW_WEBPACK_ENTRY: string;
 declare const MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY: string;
 
 // prettier-ignore
-const configPath =
-    'C:\\Users\\admin\\iCloudDrive\\Конспираторы\\ОВЭД\\БД Производство\\0_Аналитика ССД\\Конфигурация\\config.json';
-
-export let settingsLogin: typeof config.settings;
+export let settingsLogin: ConfigT['settings'];
 
 if (require('electron-squirrel-startup')) {
     app.quit();
 }
 
 const createWindow = (): void => {
+    // child_process.exec('C:\\RunFlow.ps1', { shell: 'powershell.exe' });
+
+    const dataRows: string[][] = [];
+
+    // console.log(child.stdout);
+    // new ExcelJS.Workbook().xlsx
+    //     .readFile('C:\\Users\\admin\\iCloudDrive\\example.xlsx')
+    //     .then((book) => {
+    //         const ws = book.getWorksheet('Sheet');
+    //         const table = ws.getTable('Таблица_имена') as any;
+    //         const ref = table.table.tableRef;
+
+    //         ws.eachRow((r) => {
+    //             const dataRow: string[] = [];
+
+    //             r.eachCell((c) => {
+    //                 dataRow.push(c.value.toString());
+    //             });
+    //             dataRows.push(dataRow);
+    //         });
+
+    //         dataRows.shift();
+    //         console.log(dataRows);
+    //     });
+
     updateElectronApp({ notifyUser: true });
     setLoggingTrace();
     // Create the browser window.
@@ -40,7 +65,7 @@ const createWindow = (): void => {
     // and load the index.html of the app.
     mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
 
-    settingsLogin = JSON.parse(fs.readFileSync(configPath).toString()).settings;
+    settingsLogin = JSON.parse(fs.readFileSync(configUrl).toString()).settings;
 
     ipcMain.on('downloadSSDDate', (e, date: FormDateT) => {
         downloadSSD(date);
@@ -51,7 +76,10 @@ const createWindow = (): void => {
 
         resetSettings.isChecked = checkBox.isChecked;
     });
-    ipcMain.on('sendXMLSSD', () => readXmlSSD());
+    ipcMain.on('sendXMLSSD', () => {
+        const ssd = moveXMLToCloud();
+        sendInfoBot(ssd);
+    });
 
     // let task: nodeCron.ScheduledTask;
     const cbPlanner = () => {
