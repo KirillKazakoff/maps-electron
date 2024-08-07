@@ -1,6 +1,6 @@
 import settingsStore from './UI/stores/settingsStore';
 import './UI/indexReact';
-import { SettingsLoginT } from './xml/downloadSSD';
+import { SettingsLoginT } from './utils/types';
 
 const renderer = async () => {
     const settingsDefault =

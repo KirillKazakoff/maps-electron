@@ -10,7 +10,7 @@ export const FormInput = observer(() => {
 
     return (
         <form className="form-date">
-            <h3>Форма планировщик расписание</h3>
+            <h3 className="form-header">Запустить планировщик</h3>
             <div className="form-date-inputs">
                 <input
                     id="schedule"
@@ -19,10 +19,7 @@ export const FormInput = observer(() => {
                     onChange={onChange}
                 />
             </div>
-            <ButtonAction
-                cls="form-date-btn"
-                id="sendPlanner"
-                params={[settingsStore.schedule]}>
+            <ButtonAction cls="form-btn" id="sendPlanner" params={[settingsStore.schedule]}>
                 Запустить планировщик
             </ButtonAction>
         </form>

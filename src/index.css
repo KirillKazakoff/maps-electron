@@ -3,7 +3,8 @@ body {
         sans-serif;
     margin: auto;
     max-width: 400px;
-    padding: 2rem;
+    padding: 30px;
+    overflow-y: hidden;
 }
 
 .rest-controllers {
@@ -39,4 +40,30 @@ body {
 .form-btn {
     margin-top: 10px;
     width: 100%;
+}
+
+.form-header {
+    margin-bottom: 10px;
+}
+
+/* links */
+.links {
+    font-size: 18px;
+    color: green;
+    display: flex;
+    margin-left: 0px;
+    column-gap: 20px;
+}
+
+.router-link:hover {
+    cursor: pointer;
+    color: royalblue;
+}
+
+.title-app {
+    margin-top: 0px;
+}
+
+.app {
+    margin-top: 15px;
 }

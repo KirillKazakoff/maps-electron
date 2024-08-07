@@ -22,7 +22,7 @@ export const moveXMLToCloud = () => {
 
     // readSSDAndRename
     ssdFileNames.forEach((file) => {
-        if (!file.name.includes('xml')) return;
+        if (!file.name.includes('Ф16')) return;
 
         const filePath = `${xmlPathes.downloadsSSD}${file.name}`;
         const xml = fs.readFileSync(filePath);

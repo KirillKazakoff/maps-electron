@@ -19,7 +19,7 @@ export const Checkbox = observer(({ id, title }: PropsT) => {
     const onChange = () => {
         const cloneSettings = _.cloneDeep(settings);
         cloneSettings.isChecked = !isChecked;
-        window.electronAPI.sendSettings(cloneSettings);
+        window.electronAPI.sendSettings(cloneSettings as any);
 
         setChecked(!isChecked);
     };

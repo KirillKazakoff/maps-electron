@@ -1,29 +1,30 @@
-import React from 'react';
-import ButtonAction from './ButtonAction';
-import { FormDate } from './FormDate';
-import { Checkbox } from './CheckBox';
-import { getDateObj } from './logic/getDate';
+import { useState } from 'react';
 import { observer } from 'mobx-react-lite';
-import { FormInput } from './FormInput';
+import { Osm } from './Osm';
+import PowerAUI from './PowerAUI';
 
 export const App = observer(() => {
-    const dateObj = getDateObj();
+    const [state, setState] = useState('osm');
+
+    const onClick = (e: React.SyntheticEvent<HTMLDivElement>) => {
+        const value = e.currentTarget.textContent.toLowerCase();
+        setState(value);
+    };
+
+    const Output = state === 'osm' ? Osm : PowerAUI;
 
     return (
-        <div>
-            <h1>Загрузить</h1>
-            <form className="form">
-                <Checkbox id="company" title="Компания" />
-                <Checkbox id="liveCrab" title="Живой краб" />
-            </form>
-
-            <div className="rest-controllers rest-first-stage">
-                <ButtonAction id="sendXMLSSD">Переименовать ССД ФС</ButtonAction>
-                <ButtonAction id="sendManual">Запустить задачу вручную</ButtonAction>
-
-                <FormDate date={dateObj.fromDatePicker()} />
-                <FormInput />
+        <div className="container">
+            <div className="links">
+                <div className="router-link" onClick={onClick}>
+                    OSM
+                </div>
+                <div className="router-link" onClick={onClick}>
+                    Power Automate
+                </div>
             </div>
+
+            <Output />
         </div>
     );
 });

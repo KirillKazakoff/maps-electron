@@ -31,7 +31,7 @@ export const renameXML = (ssdList: SSD[], oldPath: string) => {
     });
 
     // // move ssd to icloud directory
-
-    const newPath = `${path}SSD_${formatedDate}_${ssd.vessel_name}_${ssd.vessel_id}.xml`;
+    // prettier-ignore
+    const newPath = `${path}SSD_${formatedDate}_${ssd.vessel_name.toUpperCase()}_${ssd.vessel_id}.xml`;
     fs.renameSync(oldPath, newPath);
 };

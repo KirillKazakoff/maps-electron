@@ -27,10 +27,10 @@ bot.botObj.on('message', (msg) => {
     console.log(msg.chat.id);
 });
 
-bot.botObj.sendDocument(
-    1082543248,
-    'C:\\Users\\admin\\iCloudDrive\\ТАМОЖНЯ\\2024\\ВЛД 2024\\08_Лира_28.03.2024 (Бух. 29.03.2024)\\Экспорт\\Доп №215 (278-215).pdf'
-);
+// bot.botObj.sendDocument(
+//     1082543248,
+//     'C:\\Users\\admin\\iCloudDrive\\ТАМОЖНЯ\\2024\\ВЛД 2024\\08_Лира_28.03.2024 (Бух. 29.03.2024)\\Экспорт\\Доп №215 (278-215).pdf'
+// );
 
 // bot.botObj.on('message', (msg) => {
 //     const chatId = msg.chat.id;

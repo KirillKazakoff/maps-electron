@@ -28,3 +28,7 @@ export const calcARMDateFromNow = () => {
         end: now.toFormat(format),
     };
 };
+
+export const getDateNow = () => {
+    return DateTime.now().toFormat(format);
+};

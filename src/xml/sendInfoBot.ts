@@ -1,4 +1,4 @@
-import { settingsLogin } from '../index';
+import { settingsLogin } from '../utils/readConfig';
 import { SSDObjectedT } from '../api/models';
 import { bot } from '../telegramBot/bot';
 import { SSDInfo } from './parseReportSSD/parseReportSSD';
@@ -6,8 +6,6 @@ import { SSDInfo } from './parseReportSSD/parseReportSSD';
 export const sendInfoBot = (inputSSD: SSDInfo) => {
     const vesselsCompany = settingsLogin[1].vesselsId;
     const ssdList: SSDObjectedT[] = [];
-
-    console.log('herer');
 
     vesselsCompany.forEach((vessel) => {
         const ssdFiltered = inputSSD.ssd.filter((s) => s.vessel_id === vessel);
