@@ -14,10 +14,15 @@ const electronApi = {
         //F19
         sendF19: () => ipcRenderer.send('sendF19'),
         sendXMLF19: () => ipcRenderer.send('sendXMLF19'),
+        //F10
+        sendF10: () => ipcRenderer.send('sendF10'),
 
         // sendToNode (register md)
-        sendUpdateRegister: () => ipcRenderer.send('sendUpdateRegister'),
         sendUpdateMd: () => ipcRenderer.send('sendUpdateMd'),
+        sendUpdateModel: () => ipcRenderer.send('sendUpdateModel'),
+        sendUpdateRegister: () => ipcRenderer.send('sendUpdateRegister'),
+        sendUpdateRDO: () => ipcRenderer.send('sendUpdateRDO'),
+
         sendPlannerRegisterMd: () => ipcRenderer.send('sendPlannerRegisterMd'),
 
         // sendToRenderer
@@ -27,6 +32,7 @@ const electronApi = {
     sendSettings: (settings: CheckBoxSettingsT) => {
         ipcRenderer.send('sendSettings', settings);
     },
+    getDevStatus: () => ipcRenderer.invoke('getDevStatus'),
 };
 
 export type ElectronApiT = typeof electronApi;

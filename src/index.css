@@ -3,8 +3,9 @@ body {
         sans-serif;
     margin: auto;
     max-width: 400px;
-    padding: 30px;
+    padding: 0px;
     overflow-y: hidden;
+    background-color: bisque;
 }
 
 .rest-controllers {
@@ -37,9 +38,22 @@ body {
     justify-content: space-between;
 }
 
+/* btn */
+.btn-block {
+    display: flex;
+    flex-direction: column;
+    row-gap: 10px;
+}
+
 .form-btn {
     margin-top: 10px;
     width: 100%;
+}
+
+.line-separator {
+    height: 3px;
+    width: 100%;
+    background-color: rosybrown;
 }
 
 .form-header {
@@ -49,7 +63,8 @@ body {
 /* links */
 .links {
     font-size: 18px;
-    color: green;
+    font-weight: bold;
+    color: black;
     display: flex;
     margin-left: 0px;
     column-gap: 20px;
@@ -66,4 +81,20 @@ body {
 
 .app {
     margin-top: 15px;
+}
+
+.app-status {
+    margin-left: auto;
+    font-weight: 600;
+    color: cadetblue;
+}
+
+.container {
+    padding: 30px;
+}
+
+.container-dev {
+    padding: 30px;
+    background-color: azure;
+    min-height: 100vh;
 }

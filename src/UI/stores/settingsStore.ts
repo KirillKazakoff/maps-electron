@@ -1,5 +1,5 @@
 import { makeAutoObservable } from 'mobx';
-import { ConfigT } from '../../utils/types';
+import { SettingsLoginT } from '../../utils/types';
 
 const initDate = () => ({
     start: '',
@@ -9,15 +9,15 @@ const initDate = () => ({
 export type FormDateT = ReturnType<typeof initDate>;
 
 class SettingsStore {
-    settings: ConfigT[];
+    settings: SettingsLoginT[];
     date = initDate();
-    schedule = '0 0 13 * * *';
+    schedule = '0 0 8 * * *';
 
     constructor() {
         makeAutoObservable(this);
     }
 
-    setSettings(settings: ConfigT[]) {
+    setSettings(settings: SettingsLoginT[]) {
         this.settings = settings;
     }
     setDate(position: keyof FormDateT, value: string) {

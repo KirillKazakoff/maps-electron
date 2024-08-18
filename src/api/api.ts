@@ -1,5 +1,5 @@
 import { Coordinates, Vessel } from './models';
-import { SSDInfo } from '../xml/parseReportSSD/parseReportSSD';
+import { SSDInfo } from '../xml/f16/parseF16/parseReportSSD';
 import axios from 'axios';
 
 const baseUrl = 'http://localhost:9092';

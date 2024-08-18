@@ -7,7 +7,6 @@ declare const MAIN_WINDOW_WEBPACK_ENTRY: string;
 declare const MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY: string;
 
 // prettier-ignore
-
 if (require('electron-squirrel-startup')) {
     app.quit();
 }
@@ -17,6 +16,8 @@ const createWindow = (): void => {
     setLoggingTrace();
     // Create the browser window.
     const mainWindow = new BrowserWindow({
+        width: 800,
+        height: 700,
         webPreferences: {
             preload: MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY,
         },
@@ -34,12 +35,3 @@ const createWindow = (): void => {
 };
 
 app.on('ready', createWindow);
-
-// app.on('window-all-closed', async () => {
-//     bot.sendAll('closed');
-
-//     await new Promise((res) => {
-//         setTimeout(() => res('done'), 5000);
-//     });
-//     app.quit();
-// });

@@ -1,14 +1,15 @@
 import xml2js from 'xml2js';
-import { getXMLDirPath } from '../../fsModule/fsUtils';
+import { getDirPathes } from '../fsModule/fsUtils';
 import fs from 'fs';
 import { F19T } from '../../utils/types';
-import { settingsLogin, rewriteConfig } from '../../utils/readConfig';
+import { settingsLogin, rewriteConfig, getConfig } from '../fsModule/readConfig';
 import { bot } from '../../telegramBot/bot';
 
-const xmlPathes = getXMLDirPath();
+const xmlPathes = getDirPathes();
 
 export const parseF19 = () => {
     const vessels = settingsLogin[0].vesselsId;
+    const exceptions = getConfig().exceptionVessels;
 
     const ssdFileNames = fs.readdirSync(`${xmlPathes.downloads}`, {
         withFileTypes: true,
@@ -35,10 +36,11 @@ export const parseF19 = () => {
                 const id = vessel[0].split(/[()]/)[1];
                 const isEqualRecord = vessels.some((v) => v === id);
                 const isCrab = product && product[0].includes('краб');
+                const isException = exceptions.some((v) => v === id);
 
                 if (!product) return;
 
-                if (!isEqualRecord && isCrab) {
+                if (!isEqualRecord && !isException && isCrab) {
                     newVessels.push(id);
                 }
             });
@@ -46,11 +48,13 @@ export const parseF19 = () => {
 
         const setVessels = Array.from(new Set(newVessels));
         if (setVessels.length > 0) {
-            bot.sendAll('new vessels registered are' + setVessels.join(' '));
+            bot.sendAll('new vessels registered are ' + setVessels.join(' '));
         }
 
         // fsWrite
         settingsLogin[0].vesselsId.push(...setVessels);
+        settingsLogin[2].vesselsId.push(...setVessels);
         rewriteConfig();
+        fs.unlinkSync(filePath);
     });
 };

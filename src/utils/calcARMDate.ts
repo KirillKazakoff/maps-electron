@@ -29,6 +29,13 @@ export const calcARMDateFromNow = () => {
     };
 };
 
+export const getDateF10Report = () => {
+    const format = 'dd.MM.yyyy';
+    const now = DateTime.now().minus({ day: 1 }).toFormat(format);
+
+    return now + ' ' + '0:00:00';
+};
+
 export const getDateNow = () => {
     return DateTime.now().toFormat(format);
 };

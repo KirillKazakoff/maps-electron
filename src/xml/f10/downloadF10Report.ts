@@ -1,14 +1,13 @@
 import puppeteer from 'puppeteer';
 import { browser } from '../armBrowser/browser';
-import { settingsLogin } from '../fsModule/readConfig';
 import { login } from '../armBrowser/login';
+import { settingsLogin } from '../fsModule/readConfig';
 import { downloadFile } from '../armBrowser/downloadFile/downloadFile';
-import { FormDateT } from '../../UI/stores/settingsStore';
 import { bot } from '../../telegramBot/bot';
-import { parseF19 } from './parseF19';
+import { f10Browser } from './f10Browser';
+import { moveF10 } from './moveF10';
 
-export const downloadF19Report = async (date: FormDateT) => {
-    // prettier-ignore
+export const downloadF10Report = async () => {
     const timers: NodeJS.Timer[] = [];
     const settings = settingsLogin[0];
 
@@ -16,25 +15,28 @@ export const downloadF19Report = async (date: FormDateT) => {
     await login(settings);
 
     try {
-        // await downloadXML(reportUrl, timers);
-        await downloadFile({
-            url: `https://mon.cfmc.ru/ReportViewer.aspx?Report=5&IsAdaptive=false&VesselListId=1352447&StartDate=${date.start}&EndDate=${date.end}`,
-            docType: 'xml',
+        const page = await f10Browser({
+            url: 'https://mon.cfmc.ru/ReportViewer.aspx?Report=28&IsAdaptive=false&OwnerListId=116124&Date=08-08-2024',
             timers,
+        });
+        if (!page) throw new Error('error_restart');
+
+        await downloadFile({
+            docType: 'xlsx',
+            timers,
+            page,
         });
     } catch (e) {
         if (e.message === 'error_restart') {
-            bot.sendSSDLog('F19 Report not downloaded, trying again');
+            bot.sendSSDLog('F10 Report not downloaded, trying again');
             await browser.clear(timers);
-            await downloadF19Report(date);
+            await downloadF10Report();
 
             return;
         }
-
-        console.error(e.message);
     }
 
     await browser.clear(timers);
 
-    parseF19();
+    moveF10();
 };

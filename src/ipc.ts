@@ -1,24 +1,26 @@
-import { ipcMain, utilityProcess } from 'electron';
-import { bot } from './telegramBot/bot';
+import { ipcMain } from 'electron';
+import { bot, sendReportVessels } from './telegramBot/bot';
 import { getDateObj } from './UI/logic/getDate';
 import { FormDateT } from './UI/stores/settingsStore';
 import { CheckBoxSettingsT } from './utils/types';
-import childProcess from 'child_process';
 import nodeCron from 'node-cron';
-import { downloadSSD } from './xml/downloadSSD';
-import { moveXMLToCloud } from './xml/moveXmlToCloud';
-import { sendInfoBot } from './xml/sendInfoBot';
+import { downloadF16Report } from './xml/f16/downloadF16Report';
+import { moveF16 } from './xml/f16/moveF16';
+import { sendF16InfoBot } from './xml/f16/sendF16InfoBot';
 import { timePromise } from './utils/time';
-import { readConfig, settingsLogin } from './utils/readConfig';
-import { downloadF19Report } from './xml/F19/downloadF19Report';
+import { readConfig, settingsLogin } from './xml/fsModule/readConfig';
+import { downloadF19Report } from './xml/f19/downloadF19Report';
 import { calcARMDateFromNow } from './utils/calcARMDate';
-import { parseF19 } from './xml/F19/parseF19';
+import { parseF19 } from './xml/f19/parseF19';
+import { startProcessPA } from './utils/startProcessPA';
+import { isDev } from './utils/isDev';
+import { downloadF10Report } from './xml/f10/downloadF10Report';
 
 export const addIpcListeners = () => {
     // osm download ssd
     ipcMain.on('downloadSSDDate', (e, date: FormDateT) => {
         readConfig();
-        downloadSSD(date);
+        downloadF16Report(date);
     });
     ipcMain.on('sendSettings', (e, checkBox: CheckBoxSettingsT) => {
         readConfig();
@@ -30,23 +32,35 @@ export const addIpcListeners = () => {
     ipcMain.on('sendXMLSSD', () => {
         readConfig();
         console.log(settingsLogin);
-        const ssd = moveXMLToCloud();
-        sendInfoBot(ssd);
+        const ssd = moveF16();
+        sendF16InfoBot(ssd);
     });
 
     const cbPlanner = async () => {
-        bot.sendAll('Planner SSD started');
         readConfig();
+        bot.sendAll('Osm reports load started');
 
-        await downloadSSD(getDateObj().fromYearStart());
-        bot.sendAll('F19 report load started');
-        downloadF19Report(calcARMDateFromNow());
+        // osm reports load
+        const dateNow = getDateObj().fromYearStart();
+        await downloadF16Report(dateNow);
+        await downloadF19Report(calcARMDateFromNow());
+        await downloadF10Report();
+
+        // update md
+        await timePromise(50000);
+        updateMd();
+        await timePromise(250000);
+        updateModel();
+        await timePromise(160000);
+        // sendPdfReport
+        sendReportVessels('Модель данных.pdf');
     };
     ipcMain.on('sendManual', () => cbPlanner());
 
     let taskOsm: nodeCron.ScheduledTask;
     ipcMain.on('sendPlanner', (e, schedule) => {
-        console.log(schedule);
+        bot.sendAll('bot osm load planned on ' + schedule);
+
         if (taskOsm) taskOsm.stop();
         taskOsm = nodeCron.schedule(schedule, cbPlanner);
     });
@@ -61,39 +75,46 @@ export const addIpcListeners = () => {
         parseF19();
     });
 
-    // update registers md
-    const updateRegister = () => {
-        utilityProcess.fork('C:\\RunFlow.ps1');
-        childProcess.spawn('C:\\RunFlow.ps1', { shell: 'powershell.exe' });
-        console.log('update register files');
-    };
+    //osm F10
+    ipcMain.on('sendF10', () => {
+        readConfig();
+        downloadF10Report();
+    });
 
+    // update PA
     const updateMd = () => {
-        utilityProcess.fork('C:\\RunFlowPDF.ps1');
-        childProcess.spawn('C:\\RunFlowPDF.ps1', { shell: 'powershell.exe' });
-        console.log('update md ssdDB files');
+        startProcessPA({ filePath: 'updateMd.ps1', log: 'update md ssdDB files' });
     };
-
-    ipcMain.on('sendUpdateRegister', () => updateRegister());
+    const updateModel = () => {
+        startProcessPA({ filePath: 'updateModel.ps1', log: 'update RDO folder' });
+    };
+    const updateRegister = () => {
+        startProcessPA({ filePath: 'updateRegisters.ps1', log: 'update register files' });
+    };
+    const updateRDO = () => {
+        startProcessPA({ filePath: 'moveRdo.ps1', log: 'update RDO folder' });
+    };
 
     ipcMain.on('sendUpdateMd', () => updateMd());
+    ipcMain.on('sendUpdateModel', () => updateModel());
+    ipcMain.on('sendUpdateRegister', () => updateRegister());
+    ipcMain.on('sendUpdateRDO', () => updateRDO());
 
     let taskRegistersMd: nodeCron.ScheduledTask;
-    const plannerRegisterMd = async () => {
+    const plannerPA = async () => {
         bot.sendAll('register md log planner started');
-
-        updateMd();
-        await timePromise(500000);
         updateRegister();
+        await timePromise(15000);
+        updateRDO();
     };
 
     ipcMain.on('sendPlannerRegisterMd', () => {
-        nodeCron.getTasks().forEach((t) => t.stop());
         if (taskRegistersMd) taskRegistersMd.stop();
 
-        plannerRegisterMd();
-        taskRegistersMd = nodeCron.schedule('0 0 2 * * *', plannerRegisterMd);
+        plannerPA();
+        taskRegistersMd = nodeCron.schedule('0 0 */4 * * *', plannerPA);
     });
 
     ipcMain.handle('getDefaultSettings', () => settingsLogin);
+    ipcMain.handle('getDevStatus', () => isDev());
 };
