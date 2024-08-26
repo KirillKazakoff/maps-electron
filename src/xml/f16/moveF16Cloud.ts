@@ -1,6 +1,6 @@
 import { SSD } from '../../api/models';
 import fs from 'fs';
-import { getDirPathes } from './fsUtils';
+import { getDirPathes } from '../fsModule/fsPathes';
 import { DateTime } from 'luxon';
 
 export const renameXML = (ssdList: SSD[], oldPath: string) => {

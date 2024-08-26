@@ -1,8 +1,8 @@
 import xml2js from 'xml2js';
 import fs from 'fs';
 import { parseReportSSD, ReportT, initSSDInfo, SSDInfo } from './parseF16/parseReportSSD';
-import { getDirPathes } from '../fsModule/fsUtils';
-import { renameXML } from '../fsModule/renameXML';
+import { getDirPathes } from '../fsModule/fsPathes';
+import { renameXML } from './moveF16Cloud';
 import { moveF16XmlDownloads } from './moveF16XmlDownloads';
 
 const xmlPathes = getDirPathes();

@@ -1,5 +1,5 @@
 import fs from 'fs';
-import { getDirPathes } from '../fsModule/fsUtils';
+import { getDirPathes } from '../fsModule/fsPathes';
 
 export const moveF16XmlDownloads = () => {
     const xmlPathes = getDirPathes();

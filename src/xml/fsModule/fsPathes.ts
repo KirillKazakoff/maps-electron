@@ -19,5 +19,6 @@ export const getDirPathes = () => {
         downloadsSSD: downloadDir + '\\SSD\\',
         ssd: cloudDir + '\\SSD\\',
         quotes: mainDir + '\\КВОТЫ ССД\\Квоты РФ',
+        f19: mainDir + '\\ДВ БД\\Выгрузки\\Вылов (форма Ф19)\\',
     };
 };

@@ -39,3 +39,7 @@ export const getDateF10Report = () => {
 export const getDateNow = () => {
     return DateTime.now().toFormat(format);
 };
+
+export const getDateF19Report = () => {
+    return DateTime.now().minus({ day: 1 }).toFormat('yyyy.MM');
+};

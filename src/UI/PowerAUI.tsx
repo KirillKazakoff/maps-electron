@@ -20,6 +20,10 @@ export default function PowerAUI() {
                         <ButtonAction id="sendUpdateModel">
                             Обновить модель данных
                         </ButtonAction>
+                        <ButtonAction id="sendReportDebug">Отправить отчет TG</ButtonAction>
+                        <ButtonAction id="sendUpdateModelAll">
+                            База -- Модель -- TG
+                        </ButtonAction>
                     </ButtonsBlock>
                 </div>
             </form>

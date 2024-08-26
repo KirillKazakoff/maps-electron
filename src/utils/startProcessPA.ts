@@ -1,5 +1,5 @@
 import childProcess from 'child_process';
-import { getDirPathes } from '../xml/fsModule/fsUtils';
+import { getDirPathes } from '../xml/fsModule/fsPathes';
 
 // 'C:\\RunFlow.ps1'
 type Props = {

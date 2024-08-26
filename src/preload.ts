@@ -22,6 +22,8 @@ const electronApi = {
         sendUpdateModel: () => ipcRenderer.send('sendUpdateModel'),
         sendUpdateRegister: () => ipcRenderer.send('sendUpdateRegister'),
         sendUpdateRDO: () => ipcRenderer.send('sendUpdateRDO'),
+        sendReportDebug: () => ipcRenderer.send('sendReportDebug'),
+        sendUpdateModelAll: () => ipcRenderer.send('sendUpdateModelAll'),
 
         sendPlannerRegisterMd: () => ipcRenderer.send('sendPlannerRegisterMd'),
 

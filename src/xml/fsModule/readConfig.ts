@@ -1,4 +1,4 @@
-import { configUrl } from './fsUtils';
+import { configUrl } from './fsPathes';
 import { ConfigT, SettingsLoginT } from '../../utils/types';
 import fs from 'fs';
 

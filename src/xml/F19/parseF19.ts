@@ -1,9 +1,10 @@
 import xml2js from 'xml2js';
-import { getDirPathes } from '../fsModule/fsUtils';
+import { getDirPathes } from '../fsModule/fsPathes';
 import fs from 'fs';
 import { F19T } from '../../utils/types';
 import { settingsLogin, rewriteConfig, getConfig } from '../fsModule/readConfig';
 import { bot } from '../../telegramBot/bot';
+import { getDateF19Report } from '../../utils/date';
 
 const xmlPathes = getDirPathes();
 
@@ -11,14 +12,21 @@ export const parseF19 = () => {
     const vessels = settingsLogin[0].vesselsId;
     const exceptions = getConfig().exceptionVessels;
 
-    const ssdFileNames = fs.readdirSync(`${xmlPathes.downloads}`, {
+    const fileNames = fs.readdirSync(`${xmlPathes.downloads}`, {
         withFileTypes: true,
     });
 
-    ssdFileNames.forEach((file) => {
+    fileNames.forEach((file) => {
         if (!file.name.includes('Ф19')) return;
-
         const filePath = `${xmlPathes.downloads}\\${file.name}`;
+
+        if (file.name.includes('xlsx')) {
+            const fileName = getDateF19Report();
+            const filePathNew = `${xmlPathes.f19}\\${fileName}.xlsx`;
+
+            fs.renameSync(filePath, filePathNew);
+        }
+
         const xml = fs.readFileSync(filePath);
 
         const newVessels: string[] = [];
@@ -55,6 +63,7 @@ export const parseF19 = () => {
         settingsLogin[0].vesselsId.push(...setVessels);
         settingsLogin[2].vesselsId.push(...setVessels);
         rewriteConfig();
+
         fs.unlinkSync(filePath);
     });
 };

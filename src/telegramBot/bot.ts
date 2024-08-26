@@ -2,6 +2,9 @@ import { DateTime } from 'luxon';
 import config from 'C:\\Users\\admin\\iCloudDrive\\Конспираторы\\ОВЭД\\БД Производство\\0_Аналитика ССД\\Конфигурация\\config.json';
 import TelegramBot from 'node-telegram-bot-api';
 import { isDev } from '../utils/isDev';
+import { getDateNow } from '../utils/date';
+import fs from 'fs';
+import { timePromise } from '../utils/time';
 
 const token = isDev() ? config.debugToken : config.token;
 
@@ -40,12 +43,16 @@ export const addIdListener = () => {
     });
 };
 
-// prettier-ignore
-export const sendReportVessels = (docName: string) => {
-    bot.botObj.sendDocument(
-        config.groupChatId[0],
-        'C:\\Users\\admin\\iCloudDrive\\Конспираторы\\ОВЭД\\БД Производство\\0_Аналитика ССД\\Отчеты для бота\\' + docName
-    );
+export const sendReportVessels = async (docName: string) => {
+    // prettier-ignore
+    const path = 'C:\\Users\\admin\\iCloudDrive\\Конспираторы\\ОВЭД\\БД Производство\\0_Аналитика ССД\\Отчеты для бота\\'
+    const oldPath = path + docName;
+    const newPath = `${path}Отчет от ${getDateNow()}.pdf`;
+
+    fs.renameSync(oldPath, newPath);
+
+    await timePromise(5000);
+    bot.botObj.sendDocument(config.groupChatId[0], newPath);
 };
 
 // sendReportVessels('Модель данных.pdf');

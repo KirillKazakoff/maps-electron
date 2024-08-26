@@ -1,4 +1,4 @@
-import { getDateF10Report } from '../../utils/calcARMDate';
+import { getDateF10Report } from '../../utils/date';
 import { timePromise } from '../../utils/time';
 import { browser } from '../armBrowser/browser';
 import { onError } from '../armBrowser/downloadFile/onError';

@@ -10,13 +10,58 @@ import { sendF16InfoBot } from './xml/f16/sendF16InfoBot';
 import { timePromise } from './utils/time';
 import { readConfig, settingsLogin } from './xml/fsModule/readConfig';
 import { downloadF19Report } from './xml/f19/downloadF19Report';
-import { calcARMDateFromNow } from './utils/calcARMDate';
+import { calcARMDateFromNow } from './utils/date';
 import { parseF19 } from './xml/f19/parseF19';
 import { startProcessPA } from './utils/startProcessPA';
 import { isDev } from './utils/isDev';
 import { downloadF10Report } from './xml/f10/downloadF10Report';
 
 export const addIpcListeners = () => {
+    // update PA
+    const updateMd = () => {
+        startProcessPA({ filePath: 'updateMd.ps1', log: 'update md ssdDB' });
+    };
+    const updateModel = () => {
+        startProcessPA({ filePath: 'updateModel.ps1', log: 'update model' });
+    };
+    const updateRegister = () => {
+        startProcessPA({ filePath: 'updateRegisters.ps1', log: 'update register files' });
+    };
+    const updateRDO = () => {
+        startProcessPA({ filePath: 'moveRdo.ps1', log: 'update RDO folder' });
+    };
+    const updateModelAll = async () => {
+        updateMd();
+        await timePromise(250000);
+        updateModel();
+        await timePromise(160000);
+        console.log('send report to telegram HERE');
+        // sendPdfReport
+        sendReportVessels('Модель данных.pdf');
+    };
+
+    ipcMain.on('sendUpdateMd', () => updateMd());
+    ipcMain.on('sendUpdateModel', () => updateModel());
+    ipcMain.on('sendUpdateRegister', () => updateRegister());
+    ipcMain.on('sendUpdateRDO', () => updateRDO());
+    ipcMain.on('sendReportDebug', () => sendReportVessels('Модель данных.pdf'));
+    ipcMain.on('sendUpdateModelAll', () => updateModelAll());
+
+    let taskRegistersMd: nodeCron.ScheduledTask;
+    const plannerPA = async () => {
+        bot.sendAll('register md log planner started');
+        updateRegister();
+        await timePromise(15000);
+        updateRDO();
+    };
+
+    ipcMain.on('sendPlannerRegisterMd', () => {
+        if (taskRegistersMd) taskRegistersMd.stop();
+
+        plannerPA();
+        taskRegistersMd = nodeCron.schedule('0 0 */4 * * *', plannerPA);
+    });
+
     // osm download ssd
     ipcMain.on('downloadSSDDate', (e, date: FormDateT) => {
         readConfig();
@@ -45,15 +90,9 @@ export const addIpcListeners = () => {
         await downloadF16Report(dateNow);
         await downloadF19Report(calcARMDateFromNow());
         await downloadF10Report();
-
-        // update md
         await timePromise(50000);
-        updateMd();
-        await timePromise(250000);
-        updateModel();
-        await timePromise(160000);
-        // sendPdfReport
-        sendReportVessels('Модель данных.pdf');
+        // update md
+        await updateModelAll();
     };
     ipcMain.on('sendManual', () => cbPlanner());
 
@@ -81,40 +120,16 @@ export const addIpcListeners = () => {
         downloadF10Report();
     });
 
-    // update PA
-    const updateMd = () => {
-        startProcessPA({ filePath: 'updateMd.ps1', log: 'update md ssdDB files' });
-    };
-    const updateModel = () => {
-        startProcessPA({ filePath: 'updateModel.ps1', log: 'update RDO folder' });
-    };
-    const updateRegister = () => {
-        startProcessPA({ filePath: 'updateRegisters.ps1', log: 'update register files' });
-    };
-    const updateRDO = () => {
-        startProcessPA({ filePath: 'moveRdo.ps1', log: 'update RDO folder' });
-    };
-
-    ipcMain.on('sendUpdateMd', () => updateMd());
-    ipcMain.on('sendUpdateModel', () => updateModel());
-    ipcMain.on('sendUpdateRegister', () => updateRegister());
-    ipcMain.on('sendUpdateRDO', () => updateRDO());
-
-    let taskRegistersMd: nodeCron.ScheduledTask;
-    const plannerPA = async () => {
-        bot.sendAll('register md log planner started');
-        updateRegister();
-        await timePromise(15000);
-        updateRDO();
-    };
-
-    ipcMain.on('sendPlannerRegisterMd', () => {
-        if (taskRegistersMd) taskRegistersMd.stop();
-
-        plannerPA();
-        taskRegistersMd = nodeCron.schedule('0 0 */4 * * *', plannerPA);
-    });
-
+    // send to client
     ipcMain.handle('getDefaultSettings', () => settingsLogin);
     ipcMain.handle('getDevStatus', () => isDev());
+
+    // start planners on prod
+    if (!isDev()) {
+        bot.sendAll('xlsx update + osm update planners added');
+        taskOsm = nodeCron.schedule('0 0 8 * * *', cbPlanner);
+        taskRegistersMd = nodeCron.schedule('0 0 */4 * * *', plannerPA);
+    }
+
+    // sendReportVessels('Модель данных.pdf');
 };
