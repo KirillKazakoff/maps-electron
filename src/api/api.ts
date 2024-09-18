@@ -1,5 +1,5 @@
 import { Coordinates, Vessel } from './models';
-import { SSDInfo } from '../xml/f16/parseF16/parseReportSSD';
+import { SSDInfo } from '../puppeteer/f16/parseF16/parseF16';
 import axios from 'axios';
 
 const baseUrl = 'http://localhost:9092';

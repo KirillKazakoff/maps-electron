@@ -28,12 +28,13 @@ export const calcARMDateFromNow = () => {
         end: now.toFormat(format),
     };
 };
+export const calcARMDateNow = () => {
+    const now = DateTime.now();
 
-export const getDateF10Report = () => {
-    const format = 'dd.MM.yyyy';
-    const now = DateTime.now().minus({ day: 1 }).toFormat(format);
-
-    return now + ' ' + '0:00:00';
+    return {
+        start: now.minus({ day: 1 }).toFormat(format),
+        end: now.toFormat(format),
+    };
 };
 
 export const getDateNow = () => {
@@ -42,4 +43,12 @@ export const getDateNow = () => {
 
 export const getDateF19Report = () => {
     return DateTime.now().minus({ day: 1 }).toFormat('yyyy.MM');
+};
+
+export const calcDateF10 = (params: { isTime: boolean; dateTime: DateTime }) => {
+    const { isTime, dateTime } = params;
+    const format = 'dd.MM.yyyy';
+    const timeStr = dateTime.toFormat(format);
+
+    return timeStr + ' ' + `${isTime ? '0:00:00' : ''}`;
 };

@@ -1,7 +1,7 @@
 import { app, BrowserWindow } from 'electron';
 import { setLoggingTrace } from './utils/log';
 import { updateElectronApp } from 'update-electron-app';
-import { addIpcListeners } from './ipc';
+import { addIpcListeners } from './ipc/ipc';
 
 declare const MAIN_WINDOW_WEBPACK_ENTRY: string;
 declare const MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY: string;

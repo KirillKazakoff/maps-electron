@@ -6,6 +6,7 @@ import { FormDate } from './FormDate';
 import { FormInput } from './FormInput';
 import { getDateObj } from './logic/getDate';
 import ButtonsBlock from './ButtonsBlock';
+import settingsStore from './stores/settingsStore';
 
 export const Osm = observer(() => {
     const dateObj = getDateObj();
@@ -20,18 +21,18 @@ export const Osm = observer(() => {
             <h3>Ручной запуск</h3>
             <div className="rest-controllers rest-first-stage">
                 <ButtonsBlock>
-                    <ButtonAction id="sendXMLSSD">Переименовать ССД ФС</ButtonAction>
-                    <ButtonAction id="sendManual">Запустить выгрузку вручную</ButtonAction>
+                    <ButtonAction id="sendXMLSSD">Переместить F16 ФС</ButtonAction>
+                    <ButtonAction id="sendManual">Запустить выгрузку F16 вручную</ButtonAction>
                 </ButtonsBlock>
                 <ButtonsBlock>
+                    <ButtonAction id="sendXMLF19">Переместить F19 ФС</ButtonAction>
                     <ButtonAction id="sendF19">Загрузить отчет F19</ButtonAction>
-                    <ButtonAction id="sendXMLF19">Переименовать F19 ФС</ButtonAction>
                 </ButtonsBlock>
                 <ButtonsBlock isLast>
                     <ButtonAction id="sendF10">Загрузить отчет F10</ButtonAction>
                 </ButtonsBlock>
 
-                <FormDate date={dateObj.fromDatePicker()} />
+                <FormDate date={dateObj.fromDate(settingsStore.date)} />
                 <FormInput />
             </div>
         </div>

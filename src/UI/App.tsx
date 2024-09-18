@@ -2,9 +2,10 @@ import { useEffect, useState } from 'react';
 import { observer } from 'mobx-react-lite';
 import { Osm } from './Osm';
 import PowerAUI from './PowerAUI';
+import Cerber from './Cerber';
 
 export const App = observer(() => {
-    const [state, setState] = useState('osm');
+    const [tab, setTab] = useState('osm');
     const [status, setStatus] = useState('');
 
     useEffect(() => {
@@ -16,12 +17,23 @@ export const App = observer(() => {
 
     const onClick = (e: React.SyntheticEvent<HTMLDivElement>) => {
         const value = e.currentTarget.textContent.toLowerCase();
-        setState(value);
+        setTab(value);
     };
 
     if (!status) return null;
     console.log(status);
-    const Output = state === 'osm' ? Osm : PowerAUI;
+
+    let Output: () => JSX.Element;
+
+    if (tab === 'osm') {
+        Output = Osm;
+    }
+    if (tab === 'power automate') {
+        Output = PowerAUI;
+    }
+    if (tab === 'cerber') {
+        Output = Cerber;
+    }
 
     const title = document.getElementsByTagName('title');
     title.item(0).textContent = status;
@@ -34,6 +46,9 @@ export const App = observer(() => {
                 </div>
                 <div className="router-link" onClick={onClick}>
                     Power Automate
+                </div>
+                <div className="router-link" onClick={onClick}>
+                    Cerber
                 </div>
             </div>
 

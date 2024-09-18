@@ -19,6 +19,7 @@ export const FormInput = observer(() => {
                     onChange={onChange}
                 />
             </div>
+
             <ButtonAction cls="form-btn" id="sendPlanner" params={[settingsStore.schedule]}>
                 Запустить планировщик
             </ButtonAction>

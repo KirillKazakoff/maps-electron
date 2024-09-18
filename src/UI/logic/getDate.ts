@@ -1,5 +1,5 @@
 import { DateTime } from 'luxon';
-import settingsStore from '../stores/settingsStore';
+import { FormDateT } from '../stores/settingsStore';
 
 export const getDateObj = () => {
     const toFormat = 'dd-MM-yyyy';
@@ -31,17 +31,25 @@ export const getDateObj = () => {
         fromYearStart: () => {
             return {
                 start: now.startOf('year').toFormat(toFormat),
-                end: now.toFormat(toFormat),
+                end: now.minus({ day: 1 }).toFormat(toFormat),
             };
         },
-        fromDatePicker: () => {
-            const { start, end } = settingsStore.date;
-            const dateTimeStart = DateTime.fromFormat(start, fromFormat);
-            const dateTimeEnd = end ? DateTime.fromFormat(end, fromFormat) : now;
+        fromDate: ({ start, end }: FormDateT) => {
+            let format = fromFormat;
+            const dateCheck = DateTime.fromFormat(start, format);
+
+            if (!dateCheck.isValid) format = toFormat;
+
+            const dateTimeStart = DateTime.fromFormat(start, format);
+            const dateTimeEnd = end ? DateTime.fromFormat(end, format) : now;
 
             const date = {
-                end: dateTimeEnd.toFormat(toFormat),
+                timeObj: {
+                    end: dateTimeEnd,
+                    start: dateTimeStart,
+                },
                 start: dateTimeStart.toFormat(toFormat),
+                end: dateTimeEnd.toFormat(toFormat),
             };
 
             return date;

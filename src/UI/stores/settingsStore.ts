@@ -2,8 +2,8 @@ import { makeAutoObservable } from 'mobx';
 import { SettingsLoginT } from '../../utils/types';
 
 const initDate = () => ({
-    start: '',
-    end: '',
+    start: '2024-09-01',
+    end: '2024-09-03',
 });
 
 export type FormDateT = ReturnType<typeof initDate>;
