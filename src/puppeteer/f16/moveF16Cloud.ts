@@ -11,20 +11,31 @@ export const moveF16Cloud = (ssdList: SSD[], oldPath: string) => {
     const dateTime = DateTime.fromFormat(ssd.date, 'dd.MM.yyyy');
     const formatedDate = dateTime.toFormat('yyyy-MM-dd');
 
-    // remove if same ssd vessel was before in directory
     const cloudSSDNames = fs.readdirSync(`${getDirPathes().ssd}`, {
         withFileTypes: true,
     });
 
+    //moveArchiveOnStartNewMonth
+    const isStartMonth = DateTime.now().startOf('month').day === DateTime.now().day;
+
+    if (isStartMonth) {
+        cloudSSDNames.forEach((file) => {
+            fs.renameSync(`${pathes.ssd}${file.name}`, `${pathes.archive}${file.name}`);
+        });
+    }
+
+    // remove if same ssd vessel was before in directory
     const oldSSDNames = cloudSSDNames.filter((dirent) => {
         const id = dirent.name.split(/[_.]/)[3];
         return id === ssd.vessel_id;
     });
 
-    oldSSDNames.forEach((file) => {
-        const filePath = `${path}${file.name}`;
-        fs.unlinkSync(filePath);
-    });
+    if (!isStartMonth) {
+        oldSSDNames.forEach((file) => {
+            const filePath = `${path}${file.name}`;
+            fs.unlinkSync(filePath);
+        });
+    }
 
     // // move ssd to icloud directory
     // prettier-ignore

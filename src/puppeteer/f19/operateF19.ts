@@ -59,15 +59,26 @@ export const operateF19 = () => {
         });
 
         const setVessels = Array.from(new Set(newVessels));
+
         if (setVessels.length > 0) {
             bot.sendLog('new vessels registered are ' + setVessels.join(' '));
         }
 
-        // fsWrite
+        // fsWrite new vessels
         settingsLogin[0].vesselsId.push(...setVessels);
         settingsLogin[2].vesselsId.push(...setVessels);
-        rewriteConfig();
 
-        fs.unlinkSync(filePath);
+        // removeDublicates
+        try {
+            const vessels2 = Array.from(new Set(settingsLogin[0].vesselsId));
+            console.log(vessels2);
+            settingsLogin[0].vesselsId = [...vessels2];
+            settingsLogin[2].vesselsId = [...vessels2];
+
+            rewriteConfig();
+            fs.unlinkSync(filePath);
+        } catch (e) {
+            console.log(e);
+        }
     });
 };

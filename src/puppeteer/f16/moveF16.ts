@@ -43,9 +43,6 @@ export const moveF16 = () => {
             ssdArray.ssd.push(...ssdInfo.ssd);
             ssdArray.productionDetails.push(...ssdInfo.productionDetails);
             ssdArray.productionInput.push(...ssdInfo.productionInput);
-            // ssdArray.productionTransport.push(...ssdInfo.productionTransport);
-            // ssdArray.reserve.push(...ssdInfo.reserve);
-            // ssdArray.bait.push(...ssdInfo.bait);
         });
 
         if (!currentSSD) {

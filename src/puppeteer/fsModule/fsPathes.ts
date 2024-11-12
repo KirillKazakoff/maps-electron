@@ -18,6 +18,8 @@ export const getDirPathes = () => {
         downloads: downloadDir,
         downloadsSSD: downloadDir + '\\SSD\\',
         ssd: cloudDir + '\\SSD\\',
+        archive: cloudDir + '\\Архив\\2024\\',
+        getArchiveDate: (month: string) => cloudDir + `\\Архив\\2024\\${month}`,
         quotes: mainDir + '\\КВОТЫ ССД\\Квоты РФ',
         quotesFormDate: mainDir + '\\КВОТЫ ССД\\Квоты РФ Выгрузка',
         f19: mainDir + '\\ДВ БД\\Выгрузки\\Вылов (форма Ф19)\\',

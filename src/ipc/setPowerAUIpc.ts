@@ -25,17 +25,18 @@ export const setPowerAUIpc = () => {
         await sendReport('quotes', 'Квоты и освоение');
         await sendReport('fish', 'Минтай сельдь');
         await sendReport('tech', 'Технический отчет');
+        await sendReport('crab', 'Выпуск краба за сутки');
     };
     // updateDB
     const updateModelAll = async () => {
         updateMd();
-        await timePromise(350000);
+        await timePromise(360000);
         updateModel();
         await timePromise(160000);
         updateQuotes();
-        await timePromise(220000);
+        await timePromise(280000);
 
-        sendReportsTG();
+        await sendReportsTG();
     };
 
     ipcMain.on('sendUpdateMd', () => updateMd());

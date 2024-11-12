@@ -29,7 +29,7 @@ export const addIpcListeners = () => {
     // start planners on prod
     if (!isDev()) {
         bot.sendLog('xlsx update + osm update planners added');
-        osmIpc.taskOsm = nodeCron.schedule('0 10 12 * * *', osmIpc.cbPlanner);
+        osmIpc.taskOsm = nodeCron.schedule('0 30 12 * * *', osmIpc.cbPlanner);
         powerIpc.taskRegistersMd = nodeCron.schedule('0 0 */4 * * *', powerIpc.plannerPA);
     }
 };

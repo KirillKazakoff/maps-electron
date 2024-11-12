@@ -43,7 +43,7 @@ export const addIdListener = () => {
 };
 
 export const sendReport = async (
-    type: 'vessel' | 'quotes' | 'fish' | 'tech',
+    type: 'vessel' | 'quotes' | 'fish' | 'tech' | 'crab',
     docName: string
 ) => {
     try {
@@ -56,6 +56,7 @@ export const sendReport = async (
         if (type === 'vessel') suffix = 'по судам';
         if (type === 'tech') suffix = 'технический';
         if (type === 'fish') suffix = 'по минтаю сельди';
+        if (type === 'crab') suffix = 'по выпуску краба';
 
         const newPath = `${path}Отчет ${suffix} от ${getDateNow()}.pdf`;
 

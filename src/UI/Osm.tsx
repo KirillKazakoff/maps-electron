@@ -23,6 +23,7 @@ export const Osm = observer(() => {
                 <ButtonsBlock>
                     <ButtonAction id="sendXMLSSD">Переместить F16 ФС</ButtonAction>
                     <ButtonAction id="sendManual">Запустить выгрузку F16 вручную</ButtonAction>
+                    <ButtonAction id="sendMkdir">Создать папку в архиве</ButtonAction>
                 </ButtonsBlock>
                 <ButtonsBlock>
                     <ButtonAction id="sendXMLF19">Переместить F19 ФС</ButtonAction>

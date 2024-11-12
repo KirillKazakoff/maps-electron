@@ -5,23 +5,21 @@ import { FormDateT } from './UI/stores/settingsStore';
 const electronApi = {
     api: {
         // sendToNode (osm)
-        // F16
-        downloadSSDDate: (date: FormDateT) => {
-            ipcRenderer.send('downloadSSDDate', date);
-        },
-        downloadF10Date: (date: FormDateT) => {
-            ipcRenderer.send('downloadF10Date', date);
-        },
-        sendXMLSSD: () => ipcRenderer.send('sendXMLSSD'),
-        sendPlanner: (schedule: string) => ipcRenderer.send('sendPlanner', schedule),
-
-        sendManual: () => ipcRenderer.send('sendManual'),
-
         //F19
         sendF19: () => ipcRenderer.send('sendF19'),
         sendXMLF19: () => ipcRenderer.send('sendXMLF19'),
+
+        // F16
+        sendF16: (date: FormDateT) => ipcRenderer.send('sendF16', date),
+        sendXMLF16: () => ipcRenderer.send('sendXMLF16'),
+
         //F10
         sendF10: () => ipcRenderer.send('sendF10'),
+        sendF10Date: (date: FormDateT) => ipcRenderer.send('sendF10Date', date),
+
+        // osmLoad
+        sendPlanner: (schedule: string) => ipcRenderer.send('sendPlanner', schedule),
+        sendManual: () => ipcRenderer.send('sendManual'),
 
         // sendToNode (power AU)
         sendUpdateMd: () => ipcRenderer.send('sendUpdateMd'),
@@ -40,9 +38,9 @@ const electronApi = {
         getPath: () => ipcRenderer.invoke('getPath'),
         getDefaultSettings: () => ipcRenderer.invoke('getDefaultSettings'),
     },
-    sendSettings: (settings: CheckBoxSettingsT) => {
-        ipcRenderer.send('sendSettings', settings);
-    },
+
+    // utils
+    sendSettings: (settings: CheckBoxSettingsT) => ipcRenderer.send('sendSettings', settings),
     getDevStatus: () => ipcRenderer.invoke('getDevStatus'),
 };
 

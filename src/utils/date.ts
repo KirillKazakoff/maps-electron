@@ -24,8 +24,8 @@ export const calcARMDateFromNow = () => {
     const now = DateTime.now();
 
     return {
-        start: now.startOf('month').toFormat(format),
-        end: now.toFormat(format),
+        start: now.minus({ day: 1 }).startOf('month').toFormat(format),
+        end: now.minus({ day: 1 }).toFormat(format),
     };
 };
 export const calcARMDateNow = () => {
