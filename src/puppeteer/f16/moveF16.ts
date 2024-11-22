@@ -33,7 +33,6 @@ export const moveF16 = () => {
             currentSSD = ssdInfo;
 
             console.log('parse F16');
-            console.log(ssdInfo);
             if (!ssdInfo) return;
             // prettier-ignore
             if (ssdInfo.ssd.some((s) => {
@@ -52,7 +51,7 @@ export const moveF16 = () => {
 
         currentSSD = currentSSD as SSDInfo;
 
-        moveF16Cloud(currentSSD.ssd, filePath);
+        // moveF16Cloud(currentSSD.ssd, filePath);
     });
 
     console.log('ssd have been sent to the Cloud');

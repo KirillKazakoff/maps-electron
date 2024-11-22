@@ -3,7 +3,7 @@ const mainDir ='C:\\Users\\admin\\iCloudDrive\\Конспираторы\\ОВЭ�
 const downloadDir = 'C:\\Users\\admin\\Downloads';
 const pshDir = 'C:\\Users\\admin\\Desktop\\Repo\\maps-electron\\src\\powershell\\';
 
-export const configUrl = mainDir + '\\Конфигурация\\config.json';
+export const configUrl = mainDir + '\\Конфигурация\\config-new.json';
 const cloudDir = mainDir + '\\ССД расшиф v2';
 
 export const getUserName = () => {

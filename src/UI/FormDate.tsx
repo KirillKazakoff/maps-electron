@@ -29,10 +29,10 @@ export const FormDate = observer(({ date }: PropsT) => {
                 />
             </div>
 
-            <ButtonAction cls="form-btn" id="downloadSSDDate" params={[date]}>
+            <ButtonAction cls="form-btn" id="sendF16" params={[date]}>
                 Загрузить по дате F16
             </ButtonAction>
-            <ButtonAction cls="form-btn" id="downloadF10Date" params={[date]}>
+            <ButtonAction cls="form-btn" id="sendF10Date" params={[date]}>
                 Загрузить по дате F10
             </ButtonAction>
         </form>

@@ -9,7 +9,7 @@ import { moveF16 } from '../puppeteer/f16/moveF16';
 import { sendF16InfoBot } from '../puppeteer/f16/sendF16InfoBot';
 import { downloadF19Report } from '../puppeteer/f19/downloadF19Report';
 import { operateF19 } from '../puppeteer/f19/operateF19';
-import { readConfig } from '../puppeteer/fsModule/readConfig';
+import { readConfig, vessels } from '../puppeteer/fsModule/readConfig';
 import nodeCron from 'node-cron';
 import type { PowerIpcT } from './setPowerAUIpc';
 
@@ -27,12 +27,22 @@ export const setOsmIpc = (powerIpc: PowerIpcT) => {
     // F16
     ipcMain.on('sendF16', (e, date: FormDateT) => {
         readConfig();
-        downloadF16Report(date);
+        downloadF16Report(date, [...vessels.main, ...vessels.special]);
     });
     ipcMain.on('sendXMLF16', () => {
         readConfig();
         const ssd = moveF16();
         sendF16InfoBot(ssd);
+    });
+    const sendF16CompanyPlanner = async () => {
+        readConfig();
+        const date = calcARMDateFromNow();
+        const ssd = await downloadF16Report(date, vessels.company);
+        console.log(ssd.ssd);
+        sendF16InfoBot(ssd);
+    };
+    ipcMain.on('sendF16Company', () => {
+        sendF16CompanyPlanner();
     });
 
     // F10
@@ -52,7 +62,7 @@ export const setOsmIpc = (powerIpc: PowerIpcT) => {
 
         const date = calcARMDateFromNow();
 
-        await downloadF16Report(date);
+        await downloadF16Report(date, [...vessels.main, ...vessels.special]);
         await downloadF19Report(date);
         await downloadF10Report(calcARMDateNow(), false);
 
@@ -64,8 +74,9 @@ export const setOsmIpc = (powerIpc: PowerIpcT) => {
 
     const returnObj = {
         taskOsm: <nodeCron.ScheduledTask>{},
-        taskSeaWolf: <nodeCron.ScheduledTask>{},
+        taskCompany: <nodeCron.ScheduledTask>{},
         cbPlanner,
+        sendF16CompanyPlanner,
     };
 
     ipcMain.on('sendPlanner', (e, schedule) => {

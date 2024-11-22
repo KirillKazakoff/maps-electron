@@ -1,9 +1,9 @@
+import { SettingsT } from '../../utils/types';
 import { bot } from '../../telegramBot/bot';
 import { timePromise } from '../../utils/time';
-import { SettingsLoginT } from '../../utils/types';
 import { browser } from '../browser';
 
-export async function login(settings: SettingsLoginT) {
+export async function login(settings: SettingsT) {
     try {
         await browser.launch();
         const page = await browser.instance.newPage();

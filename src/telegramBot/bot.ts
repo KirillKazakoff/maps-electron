@@ -7,6 +7,7 @@ import fs from 'fs';
 import { timePromise } from '../utils/time';
 
 const token = isDev() ? config.debugToken : config.token;
+const channelId = isDev() ? config.chatId[0] : config.groupChatId.channel;
 
 const botObj = new TelegramBot(token, { polling: true });
 
@@ -23,10 +24,15 @@ const sendSSDLog = (text: string) => {
     sendLog(msg);
 };
 
+const sendLogGroup = (text: string) => {
+    botObj.sendMessage(channelId, text, { parse_mode: 'HTML' });
+};
+
 export const bot = {
     botObj,
     sendLog,
     sendSSDLog,
+    sendLogGroup,
 };
 
 export const addIdListener = () => {

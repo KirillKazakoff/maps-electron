@@ -1,8 +1,9 @@
 // configTypes
-import config from 'C:\\Users\\admin\\iCloudDrive\\Конспираторы\\ОВЭД\\БД Производство\\0_Аналитика ССД\\Конфигурация\\config.json';
+import config from 'C:\\Users\\admin\\iCloudDrive\\Конспираторы\\ОВЭД\\БД Производство\\0_Аналитика ССД\\Конфигурация\\config-new.json';
 
 export type ConfigT = typeof config;
-export type SettingsLoginT = ConfigT['settings'][number];
+export type VesselsT = ConfigT['vessels'];
+export type SettingsT = ConfigT['settings'];
 
 // UtilsTypes
 export type CheckBoxSettingsT = { name: string; isChecked: boolean };

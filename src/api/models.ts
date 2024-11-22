@@ -16,6 +16,10 @@ export type SSD = {
     catch_zone_id: string;
     coordinates: string;
     status: string;
+    destination: {
+        port: string;
+        eta: string;
+    };
 };
 
 export type ProductionInput = {

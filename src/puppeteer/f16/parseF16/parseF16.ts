@@ -10,9 +10,6 @@ import {
 import { parseSSD } from './parseSSD';
 import { parseDetails } from './parseDetails';
 import { parseProdInput } from './parseProdInput';
-import { parseReserve } from './parseReserve';
-import { parseBait } from './parseBait';
-import { parseProdTransport } from './parseProdTransport';
 
 export type ReportT = typeof reportJson;
 

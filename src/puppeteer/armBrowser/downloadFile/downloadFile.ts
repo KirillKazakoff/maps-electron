@@ -9,9 +9,10 @@ type Params = {
     timers: NodeJS.Timeout[];
     docType: 'xml' | 'xlsx';
     page?: Page;
+    timeout?: number;
 };
 
-export const downloadFile = async ({ url, timers, docType, page: pg }: Params) => {
+export const downloadFile = async ({ url, timers, docType, page: pg, timeout }: Params) => {
     if (!browser.instance) return null;
 
     let intervalId: null;
@@ -23,7 +24,7 @@ export const downloadFile = async ({ url, timers, docType, page: pg }: Params) =
             await page.goto(url);
         }
 
-        await waitReportLoad({ intervalId, browser, page, watchEl: 'span' });
+        await waitReportLoad({ intervalId, browser, page, watchEl: 'span', timeout });
 
         console.log('WAIT DONE');
 

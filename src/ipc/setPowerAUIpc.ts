@@ -5,21 +5,17 @@ import { timePromise } from '../utils/time';
 import nodeCron from 'node-cron';
 
 export const setPowerAUIpc = () => {
-    const updateMd = () => {
+    const updateMd = () =>
         startProcessPA({ filePath: 'updateMd.ps1', log: 'update md ssdDB' });
-    };
-    const updateModel = () => {
+    const updateModel = () =>
         startProcessPA({ filePath: 'updateModel.ps1', log: 'update model' });
-    };
-    const updateRegister = () => {
+    const updateRegister = () =>
         startProcessPA({ filePath: 'updateRegisters.ps1', log: 'update register files' });
-    };
-    const updateRDO = () => {
+    const updateRDO = () =>
         startProcessPA({ filePath: 'moveRdo.ps1', log: 'update RDO folder' });
-    };
-    const updateQuotes = () => {
+    const updateQuotes = () =>
         startProcessPA({ filePath: 'updateQuotes.ps1', log: 'update Quotes file' });
-    };
+
     const sendReportsTG = async () => {
         await sendReport('vessel', 'Модель данных');
         await sendReport('quotes', 'Квоты и освоение');
@@ -34,7 +30,7 @@ export const setPowerAUIpc = () => {
         updateModel();
         await timePromise(160000);
         updateQuotes();
-        await timePromise(280000);
+        await timePromise(360000);
 
         await sendReportsTG();
     };

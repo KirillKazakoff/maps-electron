@@ -1,5 +1,5 @@
 import { browser } from '../browser';
-import { settingsLogin } from '../fsModule/readConfig';
+import { settings } from '../fsModule/readConfig';
 import { login } from '../armBrowser/login';
 import { downloadFile } from '../armBrowser/downloadFile/downloadFile';
 import { FormDateT } from '../../UI/stores/settingsStore';
@@ -9,7 +9,6 @@ import { timePromise } from '../../utils/time';
 
 export const downloadF19Report = async (date: FormDateT) => {
     const timers: NodeJS.Timeout[] = [];
-    const settings = settingsLogin[0];
 
     await login(settings);
 
@@ -19,6 +18,7 @@ export const downloadF19Report = async (date: FormDateT) => {
                 url: `https://mon.cfmc.ru/ReportViewer.aspx?Report=5&IsAdaptive=false&VesselListId=1352447&StartDate=${date.start}&EndDate=${date.end}`,
                 docType,
                 timers,
+                timeout: 600000,
             });
         } catch (e) {
             if (e.message === 'error_restart') {

@@ -4,27 +4,22 @@ import { downloadFile } from '../armBrowser/downloadFile/downloadFile';
 import { login } from '../armBrowser/login';
 import { moveF16 } from './moveF16';
 import { bot } from '../../telegramBot/bot';
-import { SettingsLoginT } from '../../utils/types';
-import { sendF16InfoBot } from './sendF16InfoBot';
-import { settingsLogin } from '../fsModule/readConfig';
+import { settings } from '../fsModule/readConfig';
+import { initSSDInfo } from './parseF16/parseF16';
 
-export type SettingsLoginCbT = (settings: SettingsLoginT[]) => Promise<any>;
-
-export const downloadF16Report = async (date: FormDateT) => {
-    let vesselsId = Array.from(new Set(settingsLogin[0].vesselsId));
-    console.log(vesselsId);
+export const downloadF16Report = async (date: FormDateT, vesselsArray: string[]) => {
+    let vessels = Array.from(new Set(vesselsArray));
+    const ssd = initSSDInfo();
 
     const recurseCb = async () => {
         const timers: NodeJS.Timeout[] = [];
 
-        const settings = settingsLogin[0];
-
         await login(settings);
 
-        let currentId = vesselsId[0];
+        let currentId = vessels[0];
         console.log(currentId);
 
-        for await (const id of vesselsId) {
+        for await (const id of vessels) {
             try {
                 console.log(id);
                 currentId = id;
@@ -32,10 +27,11 @@ export const downloadF16Report = async (date: FormDateT) => {
                     url: `https://mon.cfmc.ru/ReportViewer.aspx?Report=34&IsAdaptive=false&VesselShipId=${id}&StartDate=${date.start}&EndDate=${date.end}`,
                     docType: 'xml',
                     timers,
+                    timeout: 200000,
                 });
             } catch (e) {
                 if (e.message === 'error_restart') {
-                    vesselsId = vesselsId.slice(vesselsId.indexOf(currentId));
+                    vessels = vessels.slice(vessels.indexOf(currentId));
                     await browser.clear(timers);
                     await recurseCb();
 
@@ -48,11 +44,17 @@ export const downloadF16Report = async (date: FormDateT) => {
 
         await browser.clear(timers);
 
-        const ssdArray = moveF16();
+        // reduce ssd all together
+        const ssdPart = moveF16();
+        ssd.fileName = ssdPart.fileName;
 
-        sendF16InfoBot(ssdArray);
-        bot.sendSSDLog('SSD uploaded successfuly');
+        ssd.productionDetails.push(...ssdPart.productionDetails);
+        ssd.productionInput.push(...ssdPart.productionInput);
+        ssd.ssd.push(...ssdPart.ssd);
     };
 
     await recurseCb();
+    bot.sendSSDLog('SSD uploaded successfuly');
+
+    return ssd;
 };

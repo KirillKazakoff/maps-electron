@@ -7,9 +7,16 @@ type Params = {
     browser: BrowserT;
     page: Page;
     watchEl: 'span' | 'input';
+    timeout?: number;
 };
 
-export const waitReportLoad = async ({ intervalId, browser, page, watchEl }: Params) => {
+export const waitReportLoad = async ({
+    intervalId,
+    browser,
+    page,
+    watchEl,
+    timeout = 200000,
+}: Params) => {
     const functions = setFunctionsInPageContext(page);
 
     return new Promise((resolve, reject) => {
@@ -22,7 +29,7 @@ export const waitReportLoad = async ({ intervalId, browser, page, watchEl }: Par
                 clearInterval(intervalId);
                 return;
             }
-            if (timeWait > 600000) {
+            if (timeWait > timeout) {
                 clearInterval(intervalId);
                 reject(new Error('wait too much'));
             }

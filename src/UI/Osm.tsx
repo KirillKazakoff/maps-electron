@@ -1,7 +1,6 @@
 import React from 'react';
 import { observer } from 'mobx-react-lite';
 import ButtonAction from './ButtonAction';
-import { Checkbox } from './CheckBox';
 import { FormDate } from './FormDate';
 import { FormInput } from './FormInput';
 import { getDateObj } from './logic/getDate';
@@ -13,17 +12,13 @@ export const Osm = observer(() => {
 
     return (
         <div className="app">
-            <form className="form">
-                <Checkbox id="company" title="Компания" />
-                <Checkbox id="liveCrab" title="Живой краб" />
-            </form>
-
             <h3>Ручной запуск</h3>
+
             <div className="rest-controllers rest-first-stage">
                 <ButtonsBlock>
-                    <ButtonAction id="sendXMLSSD">Переместить F16 ФС</ButtonAction>
+                    <ButtonAction id="sendXMLF16">Переместить F16 ФС</ButtonAction>
                     <ButtonAction id="sendManual">Запустить выгрузку F16 вручную</ButtonAction>
-                    <ButtonAction id="sendMkdir">Создать папку в архиве</ButtonAction>
+                    <ButtonAction id="sendF16Company">F16 суда компании</ButtonAction>
                 </ButtonsBlock>
                 <ButtonsBlock>
                     <ButtonAction id="sendXMLF19">Переместить F19 ФС</ButtonAction>

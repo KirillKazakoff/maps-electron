@@ -8,6 +8,7 @@ const electronApi = {
         //F19
         sendF19: () => ipcRenderer.send('sendF19'),
         sendXMLF19: () => ipcRenderer.send('sendXMLF19'),
+        sendF16Company: () => ipcRenderer.send('sendF16Company'),
 
         // F16
         sendF16: (date: FormDateT) => ipcRenderer.send('sendF16', date),

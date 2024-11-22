@@ -10,7 +10,6 @@ export const parseDetails = (ssdJson: SSDReportT, ssdParsed: SSD) => {
     const detailsTotal = ssdJson.Tablix11[0].Details9_Collection[0].Details9;
     const detailsCurrent = Object.values(detailsCurrentCollection.Details7);
 
-    console.log(detailsCurrent);
     // for vessel-catcher
     const res = detailsCurrent.reduce<ProductionDetails[]>((total, details) => {
         const resArr = Object.values(details).map((detail) => detail[0]);
@@ -40,9 +39,6 @@ export const parseDetails = (ssdJson: SSDReportT, ssdParsed: SSD) => {
 
         return total;
     }, []);
-
-    console.log('parse details check');
-    console.log(res);
 
     return res;
 };

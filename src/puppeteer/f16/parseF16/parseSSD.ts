@@ -1,3 +1,4 @@
+/* eslint-disable no-useless-escape */
 import { SSD } from '../../../api/models';
 import { ReportT } from './parseF16';
 
@@ -8,6 +9,15 @@ export type SSDReportT =
 
 export const parseSSD = (ssd: SSDReportT) => {
     const header = ssd.Textbox33[0];
+    const destinationReg = ssd.Textbox4[0].split(
+        /(пункт следования).([\- \d]+)(.+)(ож. приход).([\d{2}\.]+).(.+)/
+    );
+
+    const destination = {
+        port: destinationReg[3],
+        eta: destinationReg[5],
+    };
+
     const headerSpaced = header.split(' ');
     const date = headerSpaced[0];
     const vessel_id = header.split(rgBracket)[1];
@@ -51,6 +61,7 @@ export const parseSSD = (ssd: SSDReportT) => {
         catch_zone_id,
         coordinates,
         status,
+        destination,
     };
 
     return { ssdParsed, isTransport };

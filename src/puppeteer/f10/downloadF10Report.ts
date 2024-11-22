@@ -1,6 +1,6 @@
 import { browser } from '../browser';
 import { login } from '../armBrowser/login';
-import { settingsLogin } from '../fsModule/readConfig';
+import { settings } from '../fsModule/readConfig';
 import { downloadFile } from '../armBrowser/downloadFile/downloadFile';
 import { bot } from '../../telegramBot/bot';
 import { f10Browser } from './f10Browser';
@@ -11,7 +11,6 @@ import { calcDateF10 } from '../../utils/date';
 
 export const downloadF10Report = async (date: FormDateT, isFormDate: boolean) => {
     const timers: NodeJS.Timeout[] = [];
-    const settings = settingsLogin[0];
 
     await login(settings);
 
@@ -36,6 +35,7 @@ export const downloadF10Report = async (date: FormDateT, isFormDate: boolean) =>
                 docType: 'xlsx',
                 timers,
                 page,
+                timeout: 600000,
             });
 
             moveF10(current.toFormat(format), isFormDate);

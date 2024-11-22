@@ -2,16 +2,13 @@ import xml2js from 'xml2js';
 import { getDirPathes } from '../fsModule/fsPathes';
 import fs from 'fs';
 import { F19T } from '../../utils/types';
-import { settingsLogin, rewriteConfig, getConfig } from '../fsModule/readConfig';
+import { vessels, rewriteConfig } from '../fsModule/readConfig';
 import { bot } from '../../telegramBot/bot';
 import { getDateF19Report } from '../../utils/date';
 
 const xmlPathes = getDirPathes();
 
 export const operateF19 = () => {
-    const vessels = settingsLogin[0].vesselsId;
-    const exceptions = getConfig().exceptionVessels;
-
     const fileNames = fs.readdirSync(`${xmlPathes.downloads}`, {
         withFileTypes: true,
     });
@@ -46,14 +43,22 @@ export const operateF19 = () => {
 
             details.forEach(({ VES2: vessel, FISH: product }) => {
                 const id = vessel[0].split(/[()]/)[1];
-                const isEqualRecord = vessels.some((v) => v === id);
+                const isEqualRecord = vessels.main.some((v) => v === id);
                 const isCrab = product && product[0].includes('краб');
-                const isException = exceptions.some((v) => v === id);
+                const isException = vessels.exception.some((v) => v === id);
 
                 if (!product) return;
 
                 if (!isEqualRecord && !isException && isCrab) {
                     newVessels.push(id);
+                }
+
+                // cut if exeption already in vessel list
+                if (isException) {
+                    const index = vessels.main.indexOf(id);
+                    if (index === -1) return;
+
+                    vessels.main.splice(index, 1);
                 }
             });
         });
@@ -65,15 +70,13 @@ export const operateF19 = () => {
         }
 
         // fsWrite new vessels
-        settingsLogin[0].vesselsId.push(...setVessels);
-        settingsLogin[2].vesselsId.push(...setVessels);
+        vessels.main.push(...setVessels);
 
         // removeDublicates
         try {
-            const vessels2 = Array.from(new Set(settingsLogin[0].vesselsId));
+            const vessels2 = Array.from(new Set(vessels.main));
             console.log(vessels2);
-            settingsLogin[0].vesselsId = [...vessels2];
-            settingsLogin[2].vesselsId = [...vessels2];
+            vessels.main = [...vessels2];
 
             rewriteConfig();
             fs.unlinkSync(filePath);
