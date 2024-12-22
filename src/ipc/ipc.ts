@@ -4,12 +4,12 @@ import nodeCron from 'node-cron';
 import { isDev } from '../puppeteer/fsModule/isDev';
 import { setPowerAUIpc } from './setPowerAUIpc';
 import { setOsmIpc } from './setOsmIpc';
-import { setCerberIpc } from './setCerberIpc';
+// import { setCerberIpc } from './setCerberIpc';
 
 export const addIpcListeners = () => {
     const powerIpc = setPowerAUIpc();
     const osmIpc = setOsmIpc(powerIpc);
-    const cerberIpc = setCerberIpc();
+    // const cerberIpc = setCerberIpc();
 
     // send to client
     ipcMain.handle('getDevStatus', () => isDev());

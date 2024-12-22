@@ -41,7 +41,7 @@ export const parseF16 = (report: ReportT) => {
         total.productionDetails.push(...productionDetails);
 
         const productionInput = parseProdInput(ssdParsed.id, ssdJson);
-        total.productionInput.push(productionInput);
+        total.productionInput.push(...productionInput);
 
         // const productionTransport = parseProdTransport(ssdParsed.id, ssdJson);
         // total.productionTransport.push(...productionTransport);

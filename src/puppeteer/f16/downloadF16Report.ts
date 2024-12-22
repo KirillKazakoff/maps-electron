@@ -14,7 +14,8 @@ export const downloadF16Report = async (date: FormDateT, vesselsArray: string[])
     const recurseCb = async () => {
         const timers: NodeJS.Timeout[] = [];
 
-        await login(settings);
+        const res = await login(settings);
+        if (!res) return 'no_login';
 
         let currentId = vessels[0];
         console.log(currentId);
@@ -53,8 +54,9 @@ export const downloadF16Report = async (date: FormDateT, vesselsArray: string[])
         ssd.ssd.push(...ssdPart.ssd);
     };
 
-    await recurseCb();
-    bot.sendSSDLog('SSD uploaded successfuly');
+    const status = await recurseCb();
+    if (status === 'no_login') return false;
 
+    bot.sendSSDLog('SSD uploaded successfuly');
     return ssd;
 };

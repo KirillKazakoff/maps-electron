@@ -2,6 +2,7 @@ import { vessels } from '../fsModule/readConfig';
 import { SSDObjectedT } from '../../api/models';
 import { bot } from '../../telegramBot/bot';
 import { SSDInfo } from './parseF16/parseF16';
+import { DateTime } from 'luxon';
 
 export const sendF16InfoBot = (inputSSD: SSDInfo) => {
     const ssdList: SSDObjectedT[] = [];
@@ -21,35 +22,41 @@ export const sendF16InfoBot = (inputSSD: SSDInfo) => {
         ssdList.push(ssd);
     });
 
-    console.log(ssdList);
+    // console.log(ssdList);
 
     const infoReport = ssdList.reduce((total, ssd) => {
         const { vessel_name, date, status, destination } = ssd.ssdInfo;
 
         const detailsAll = ssd.details
-            .map((d) => d.name + '\n' + d.sort + ' - ' + d.current + '\n')
+            .map((d) => d.name + '\n' + d.sort + ' - ' + d.current + ' тн.' + '\n')
             .join('');
 
         const detailsTotalAll = ssd.details
-            .map((d) => d.name + '\n' + d.sort + ' - ' + d.total + '\n')
+            .map((d) => d.name + '\n' + d.sort + ' - ' + d.total + ' тн.' + '\n')
             .join('');
 
-        const inputAll = ssd.input.map((i) => i.name + ' ' + i.total + '\n').join('');
-        const destinationStr =
-            status === 'СЛЕДУЕТ В ПОРТ' ? destination.port + '\nETA: ' + destination.eta : '';
-        const isLastEnter = detailsTotalAll[detailsTotalAll.length - 1] === '\n';
+        let inputAll = ssd.input.map((i) => i.name + ' ' + i.total + ' тн.' + '\n').join('');
+        const totalInputCount = ssd.input.reduce<number>((total, i) => total + +i.total, 0);
+        if (!totalInputCount) inputAll = '';
+
+        let destinationStr = '';
+        if (status === 'СЛЕДУЕТ В ПОРТ' || status === 'СЛЕДУЕТ НА ПРОМЫСЕЛ') {
+            destinationStr = destination.placeName + '\nETA: ' + destination.eta;
+        }
+        if (status === 'В ПОРТУ' || status === 'НА ПРОМЫСЛЕ') {
+            destinationStr = destination.placeName;
+        }
+
+        // checkDateOutdate Fn
+        const dateYesterday = DateTime.now().minus({ day: 1 }).toFormat('dd.MM.yyyy');
+        const isOutdated = dateYesterday !== ssd.ssdInfo.date;
 
         // prettier-ignore
         const reportStr = `
-<b>${vessel_name}</b>
-<i>${date} - ${status}</i>
+<b>${vessel_name}</b> ${isOutdated ? '(\nСТАРАЯ ДАТА ССД)' : ''}
+<i>${date} - ${status}</i> 
 <i>${destinationStr}</i>
-${inputAll ? `<i>Вылов</i>
-<code>${inputAll}</code>` : ''}
-${detailsAll ? `<i>Выпуск</i>
-<code>${detailsAll}</code>` : ''}
-${detailsTotalAll ? `<i>Бортовая</i>
-<code>${detailsTotalAll}</code>\n\n` : ''} ${isLastEnter ? '' : '\n\n'}`;
+${inputAll ? `\n<i>Вылов\n</i><code>${inputAll}</code>` : ''}${inputAll ? `\n<i>Выпуск\n</i><code>${detailsAll}</code>` : ''}${detailsTotalAll ? `\n<i>Бортовая\n</i><code>${detailsTotalAll}</code>` : ''} \n\n`;
 
         total += reportStr;
         return total;

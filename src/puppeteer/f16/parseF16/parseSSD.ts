@@ -9,16 +9,39 @@ export type SSDReportT =
 
 export const parseSSD = (ssd: SSDReportT) => {
     const header = ssd.Textbox33[0];
+
+    const headerSpaced = header.split(' ');
+
+    // statusParsed
+    const statusToken = headerSpaced[headerSpaced.length - 1].toLocaleLowerCase();
+    let status = 'НЕИЗВЕСТЕН';
+    let placeName = '';
     const destinationReg = ssd.Textbox4[0].split(
         /(пункт следования).([\- \d]+)(.+)(ож. приход).([\d{2}\.]+).(.+)/
     );
 
+    if (statusToken === 'промысле') {
+        status = 'НА ПРОМЫСЛЕ';
+        placeName = header.split(' - ')[1].split('°')[0].slice(0, -3);
+    }
+    if (statusToken === 'промысел') {
+        status = 'СЛЕДУЕТ НА ПРОМЫСЕЛ';
+        placeName = destinationReg[3];
+    }
+    if (statusToken === 'порту') {
+        status = 'В ПОРТУ';
+        placeName = header.split(' - ')[1].split('°')[0].slice(0, -3);
+    }
+    if (statusToken === 'порт') {
+        status = 'СЛЕДУЕТ В ПОРТ';
+        placeName = destinationReg[3];
+    }
+
     const destination = {
-        port: destinationReg[3],
         eta: destinationReg[5],
+        placeName,
     };
 
-    const headerSpaced = header.split(' ');
     const date = headerSpaced[0];
     const vessel_id = header.split(rgBracket)[1];
 
@@ -40,14 +63,6 @@ export const parseSSD = (ssd: SSDReportT) => {
         }
         return totalC;
     }, '');
-
-    // statusParsed
-    const statusToken = headerSpaced[headerSpaced.length - 1].toLocaleLowerCase();
-    let status = 'НЕИЗВЕСТЕН';
-    if (statusToken === 'промысле') status = 'НА ПРОМЫСЛЕ';
-    if (statusToken === 'промысел') status = 'СЛЕДУЕТ НА ПРОМЫСЕЛ';
-    if (statusToken === 'порту') status = 'В ПОРТУ';
-    if (statusToken === 'порт') status = 'СЛЕДУЕТ В ПОРТ';
 
     const isTransport = headerSpaced[9] === 'ТР';
 

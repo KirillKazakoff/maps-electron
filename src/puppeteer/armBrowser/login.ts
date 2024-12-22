@@ -56,8 +56,9 @@ export async function login(settings: SettingsT) {
         console.log('on ARM');
         return page;
     } catch (e) {
+        browser.clear(null, true).then(() => login(settings));
+
         bot.sendLog('error is: ' + e.message);
-        browser.instance.close();
-        login(settings);
+        return false;
     }
 }

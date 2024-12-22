@@ -4,15 +4,21 @@ import { timePromise } from '../utils/time';
 
 class BrowserC {
     instance: Browser | null;
+    errorTimes = 0;
 
     async launch() {
         this.instance = await puppeteer.launch({
             devtools: true,
             headless: false,
-            // protocolTimeout: 240000,
-            // timeout: 100000,
         });
-        // this.instance.on('disconnected', () => (this.instance = null));
+
+        setTimeout(() => {
+            try {
+                this.instance.close();
+            } catch (e) {
+                return;
+            }
+        }, 1000000);
     }
 
     async close() {
@@ -20,13 +26,27 @@ class BrowserC {
         await this.instance.close();
     }
 
-    async clear(timers: NodeJS.Timer[]) {
+    async clear(timers?: NodeJS.Timer[], isError?: boolean) {
+        if (isError) {
+            this.errorTimes += 1;
+        } else {
+            this.errorTimes = 0;
+        }
+
+        let cooldown = 2000;
+
+        if (this.errorTimes >= 30) {
+            cooldown = 3600 * 1000;
+            this.errorTimes = 0;
+        }
         await timePromise(8000);
 
-        timers.forEach((timer) => clearTimeout(timer as unknown as number));
+        if (timers) {
+            timers.forEach((timer) => clearTimeout(timer as unknown as number));
+        }
         await this.instance.close();
 
-        await timePromise(2000);
+        await timePromise(cooldown);
     }
 }
 

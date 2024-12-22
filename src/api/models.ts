@@ -17,7 +17,7 @@ export type SSD = {
     coordinates: string;
     status: string;
     destination: {
-        port: string;
+        placeName: string;
         eta: string;
     };
 };

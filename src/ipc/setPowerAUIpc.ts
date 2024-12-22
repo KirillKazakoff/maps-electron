@@ -26,11 +26,11 @@ export const setPowerAUIpc = () => {
     // updateDB
     const updateModelAll = async () => {
         updateMd();
-        await timePromise(360000);
+        await timePromise(385000);
         updateModel();
         await timePromise(160000);
         updateQuotes();
-        await timePromise(360000);
+        await timePromise(450000);
 
         await sendReportsTG();
     };

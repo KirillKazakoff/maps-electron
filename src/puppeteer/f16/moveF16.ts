@@ -5,13 +5,13 @@ import { getDirPathes } from '../fsModule/fsPathes';
 import { moveF16Cloud } from './moveF16Cloud';
 import { moveF16XmlDownloads } from './moveF16XmlDownloads';
 
-const xmlPathes = getDirPathes();
+const pathes = getDirPathes();
 
 export const moveF16 = () => {
     moveF16XmlDownloads();
     const ssdArray = initSSDInfo();
 
-    const ssdFileNames = fs.readdirSync(`${xmlPathes.downloadsSSD}`, {
+    const ssdFileNames = fs.readdirSync(`${pathes.downloadsSSD}`, {
         withFileTypes: true,
     });
 
@@ -19,7 +19,7 @@ export const moveF16 = () => {
     ssdFileNames.forEach((file) => {
         if (!file.name.includes('Ф16')) return;
 
-        const filePath = `${xmlPathes.downloadsSSD}${file.name}`;
+        const filePath = `${pathes.downloadsSSD}${file.name}`;
         const xml = fs.readFileSync(filePath);
 
         let currentSSD: SSDInfo | null = null;
@@ -51,7 +51,7 @@ export const moveF16 = () => {
 
         currentSSD = currentSSD as SSDInfo;
 
-        // moveF16Cloud(currentSSD.ssd, filePath);
+        moveF16Cloud(currentSSD.ssd, filePath);
     });
 
     console.log('ssd have been sent to the Cloud');
