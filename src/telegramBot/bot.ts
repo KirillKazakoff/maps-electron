@@ -11,9 +11,9 @@ const channelId = isDev() ? config.chatId[0] : config.groupChatId.channel;
 
 const botObj = new TelegramBot(token, { polling: true });
 
-const sendLog = (text: string) => {
+const sendLog = (text: string | number) => {
     config.chatId.forEach((id) => {
-        botObj.sendMessage(id, text, { parse_mode: 'HTML' });
+        botObj.sendMessage(id, text.toString(), { parse_mode: 'HTML' });
     });
 };
 
