@@ -1,9 +1,8 @@
 import { bot } from '../../../telegramBot/bot';
 import { browser } from '../../browser';
 
-export const onError = (intervalId: any, e: any) => {
+export const onDownloadFileError = async (intervalId: any, e: any) => {
     clearInterval(intervalId);
-    console.log(e.message);
 
     const errorsRestart = [
         'calls for a higher timeout if needed',
@@ -29,9 +28,7 @@ export const onError = (intervalId: any, e: any) => {
         return false;
     }
 
-    bot.sendLog('ERROR ' + e.message);
-
-    if (browser.instance) {
-        browser.instance.close();
-    }
+    // on unexpected error occur stop browser work + send log
+    bot.sendLog('Unexpected download file error: ' + e.message);
+    await browser.close();
 };

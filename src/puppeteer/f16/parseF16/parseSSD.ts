@@ -9,7 +9,6 @@ export type SSDReportT =
 
 export const parseSSD = (ssd: SSDReportT) => {
     const header = ssd.Textbox33[0];
-
     const headerSpaced = header.split(' ');
 
     // statusParsed

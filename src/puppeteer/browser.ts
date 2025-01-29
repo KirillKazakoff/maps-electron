@@ -13,13 +13,14 @@ class BrowserC {
             headless: false,
         });
 
+        // close browser window in any case in 90 minutes
         setTimeout(() => {
             try {
                 this.instance.close();
             } catch (e) {
                 return;
             }
-        }, 1000000);
+        }, 1000 * 60 * 90);
     }
 
     async close() {
@@ -27,18 +28,20 @@ class BrowserC {
         await this.instance.close();
     }
 
-    async clear(timers?: NodeJS.Timer[], isError?: boolean) {
+    async clear(timers: NodeJS.Timer[], isError: boolean) {
         bot.sendLog(this.errorTimes);
 
+        // refresh if no error
         if (isError) {
             this.errorTimes += 1;
         } else {
             this.errorTimes = 0;
         }
 
+        // make cooldown if many errors
         let cooldown = 2000;
 
-        if (this.errorTimes >= 30) {
+        if (this.errorTimes >= 20) {
             cooldown = 3600 * 1000;
             this.errorTimes = 0;
         }
@@ -47,7 +50,7 @@ class BrowserC {
         if (timers) {
             timers.forEach((timer) => clearTimeout(timer as unknown as number));
         }
-        await this.instance.close();
+        await this.close();
 
         await timePromise(cooldown);
     }

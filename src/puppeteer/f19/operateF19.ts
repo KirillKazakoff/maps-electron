@@ -84,4 +84,6 @@ export const operateF19 = () => {
             console.log(e);
         }
     });
+
+    bot.sendLogDated(`F19 report xml xlsx loaded`);
 };

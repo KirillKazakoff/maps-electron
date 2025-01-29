@@ -15,13 +15,16 @@ export const setPowerAUIpc = () => {
         startProcessPA({ filePath: 'moveRdo.ps1', log: 'update RDO folder' });
     const updateQuotes = () =>
         startProcessPA({ filePath: 'updateQuotes.ps1', log: 'update Quotes file' });
+    const updateF19QueryReport = () =>
+        startProcessPA({ filePath: 'updateF19QuerryReport.ps1', log: 'update Query report' });
 
     const sendReportsTG = async () => {
-        await sendReport('vessel', 'Модель данных');
-        await sendReport('quotes', 'Квоты и освоение');
-        await sendReport('fish', 'Минтай сельдь');
-        await sendReport('tech', 'Технический отчет');
-        await sendReport('crab', 'Выпуск краба за сутки');
+        await sendReport('vessel', 'Модель данных', 'pdf');
+        await sendReport('tech', 'Технический отчет', 'pdf');
+        await sendReport('crab', 'Выпуск краба за сутки', 'pdf');
+        await sendReport('f19Querry', '2025 Вылов выпуск', 'xlsx');
+        // await sendReport('quotes', 'Квоты и освоение');
+        // await sendReport('fish', 'Минтай сельдь');
     };
     // updateDB
     const updateModelAll = async () => {
@@ -29,8 +32,10 @@ export const setPowerAUIpc = () => {
         await timePromise(385000);
         updateModel();
         await timePromise(160000);
-        updateQuotes();
-        await timePromise(450000);
+        updateF19QueryReport();
+        await timePromise(320000);
+        // updateQuotes();
+        // await timePromise(550000);
 
         await sendReportsTG();
     };
@@ -42,6 +47,7 @@ export const setPowerAUIpc = () => {
     ipcMain.on('sendUpdateRDO', () => updateRDO());
     ipcMain.on('sendReportDebug', () => sendReportsTG());
     ipcMain.on('sendUpdateModelAll', () => updateModelAll());
+    ipcMain.on('sendUpdateF19QuerryReport', () => updateF19QueryReport());
 
     // planner
     let taskRegistersMd: nodeCron.ScheduledTask;

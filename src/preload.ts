@@ -31,6 +31,7 @@ const electronApi = {
         sendReportDebug: () => ipcRenderer.send('sendReportDebug'),
         sendUpdateModelAll: () => ipcRenderer.send('sendUpdateModelAll'),
         sendPlannerRegisterMd: () => ipcRenderer.send('sendPlannerRegisterMd'),
+        sendUpdateF19QuerryReport: () => ipcRenderer.send('sendUpdateF19QuerryReport'),
 
         // sendToNode (cerber)
         sendStartCerber: () => ipcRenderer.send('sendStartCerber'),

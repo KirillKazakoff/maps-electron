@@ -40,24 +40,22 @@ export const downloadF10Report = async (date: FormDateT, isFormDate: boolean) =>
 
             moveF10(current.toFormat(format), isFormDate);
         } catch (e) {
-            if (e.message === 'error_restart') {
-                bot.sendSSDLog('F10 Report not downloaded, trying again');
-                await browser.clear(timers);
+            bot.sendLogDated('F10 Report not downloaded, trying again');
+            await browser.clear(timers, true);
 
-                await downloadF10Report(
-                    {
-                        start: current.toFormat(format),
-                        end: end.toFormat(format),
-                    },
-                    isFormDate
-                );
+            await downloadF10Report(
+                {
+                    start: current.toFormat(format),
+                    end: end.toFormat(format),
+                },
+                isFormDate
+            );
 
-                return;
-            }
+            return;
         }
 
         current = current.plus({ day: 1 });
     }
 
-    await browser.clear(timers);
+    await browser.clear(timers, false);
 };

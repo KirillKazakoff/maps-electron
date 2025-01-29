@@ -1,6 +1,6 @@
 import { Page } from 'puppeteer';
 import { browser } from '../../browser';
-import { onError } from './onError';
+import { onDownloadFileError } from './onDownloadFileError';
 import { waitReportLoad } from './waitReportLoad';
 import { timePromise } from '../../../utils/time';
 
@@ -41,8 +41,7 @@ export const downloadFile = async ({ url, timers, docType, page: pg, timeout }: 
 
         timers.push(setTimeout(() => page.close(), 20000));
     } catch (e) {
-        console.log('download error');
-        onError(intervalId, e);
+        await onDownloadFileError(intervalId, e);
         return false;
     }
 };

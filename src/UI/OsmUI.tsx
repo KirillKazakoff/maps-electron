@@ -7,7 +7,7 @@ import { getDateObj } from './logic/getDate';
 import ButtonsBlock from './ButtonsBlock';
 import settingsStore from './stores/settingsStore';
 
-export const Osm = observer(() => {
+export const OsmUI = observer(() => {
     const dateObj = getDateObj();
 
     return (
@@ -24,12 +24,15 @@ export const Osm = observer(() => {
                     <ButtonAction id="sendXMLF19">Переместить F19 ФС</ButtonAction>
                     <ButtonAction id="sendF19">Загрузить отчет F19</ButtonAction>
                 </ButtonsBlock>
-                <ButtonsBlock isLast>
+                <ButtonsBlock>
                     <ButtonAction id="sendF10">Загрузить отчет F10</ButtonAction>
+                </ButtonsBlock>
+                <ButtonsBlock isLast>
+                    <ButtonAction id="sendManual">Запустить планировщик вручную</ButtonAction>
                 </ButtonsBlock>
 
                 <FormDate date={dateObj.fromDate(settingsStore.date)} />
-                <FormInput />
+                {/* <FormInput />  */}
             </div>
         </div>
     );

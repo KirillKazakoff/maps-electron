@@ -17,7 +17,7 @@ const sendLog = (text: string | number) => {
     });
 };
 
-const sendSSDLog = (text: string) => {
+const sendLogDated = (text: string) => {
     const dateStr = DateTime.now().toFormat('dd-MM-yyyy');
     const msg = text + ' ' + dateStr;
 
@@ -31,7 +31,7 @@ const sendLogGroup = (text: string) => {
 export const bot = {
     botObj,
     sendLog,
-    sendSSDLog,
+    sendLogDated,
     sendLogGroup,
 };
 
@@ -49,13 +49,15 @@ export const addIdListener = () => {
 };
 
 export const sendReport = async (
-    type: 'vessel' | 'quotes' | 'fish' | 'tech' | 'crab',
-    docName: string
+    type: 'vessel' | 'quotes' | 'fish' | 'tech' | 'crab' | 'f19Querry',
+    docName: string,
+    ext: 'pdf' | 'xlsx'
 ) => {
     try {
         // prettier-ignore
+        // add suffix for path report
         const path = 'C:\\Users\\admin\\iCloudDrive\\Конспираторы\\ОВЭД\\БД Производство\\0_Аналитика ССД\\Отчеты для бота\\'
-        const oldPath = path + docName + '.pdf';
+        const oldPath = path + docName + `.${ext}`;
 
         let suffix = '';
         if (type === 'quotes') suffix = 'по квотам';
@@ -63,29 +65,38 @@ export const sendReport = async (
         if (type === 'tech') suffix = 'технический';
         if (type === 'fish') suffix = 'по минтаю сельди';
         if (type === 'crab') suffix = 'по выпуску краба';
+        if (type === 'f19Querry') suffix = 'по вылову и выпуску продукции';
 
-        const newPath = `${path}Отчет ${suffix} от ${getDateNow()}.pdf`;
-
+        // check empty report (check first then rename file and its path)
         const fileSize = fs.readFileSync(oldPath).byteLength;
         if (fileSize / 1024 < 85) {
             throw new Error('empty report');
         }
-        fs.renameSync(oldPath, newPath);
 
-        await timePromise(10000);
+        let documentPath = `${path}Отчет ${suffix} от ${getDateNow()}.pdf`;
+
+        // rename path report if pdf
+        if (ext === 'pdf') {
+            fs.renameSync(oldPath, documentPath);
+            await timePromise(10000);
+        } else {
+            // if xlsx file dont change filename
+            // prettier-ignore
+            documentPath = 'C:\\Users\\admin\\iCloudDrive\\Конспираторы\\ОВЭД\\БД Производство\\0_Аналитика ССД\\ДВ БД\\2025 Вылов выпуск.xlsx'
+        }
+
+        // get chat where I need to send report
         let chatId = 0;
-
         if (isDev()) {
             chatId = config.chatId[0];
         } else {
             chatId = config.groupChatId.channel;
         }
-
         if (type === 'tech') {
             chatId = config.groupChatId.debug;
         }
 
-        bot.botObj.sendDocument(chatId, newPath);
+        await bot.botObj.sendDocument(chatId, documentPath);
         await timePromise(1000);
     } catch (e) {
         if (e.message === 'empty report') {

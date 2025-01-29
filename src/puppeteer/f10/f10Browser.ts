@@ -1,6 +1,6 @@
 import { timePromise } from '../../utils/time';
 import { browser } from '../browser';
-import { onError } from '../armBrowser/downloadFile/onError';
+import { onDownloadFileError } from '../armBrowser/downloadFile/onDownloadFileError';
 import { waitReportLoad } from '../armBrowser/downloadFile/waitReportLoad';
 import { getConfig } from '../fsModule/readConfig';
 
@@ -45,7 +45,7 @@ export const f10Browser = async ({ url, dateReport }: Params) => {
         return page;
     } catch (e) {
         console.log('first stage error');
-        onError(intervalId, e);
+        onDownloadFileError(intervalId, e);
         return false;
     }
 };

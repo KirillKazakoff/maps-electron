@@ -21,15 +21,11 @@ export const downloadF19Report = async (date: FormDateT) => {
                 timeout: 600000,
             });
         } catch (e) {
-            if (e.message === 'error_restart') {
-                bot.sendSSDLog('F19 Report not downloaded, trying again');
-                await browser.clear(timers);
-                await downloadF19Report(date);
+            bot.sendLogDated('F19 Report not downloaded, trying again');
+            await browser.clear(timers, true);
+            await downloadF19Report(date);
 
-                return;
-            }
-
-            console.error(e.message);
+            return;
         }
     };
 
@@ -37,7 +33,7 @@ export const downloadF19Report = async (date: FormDateT) => {
     await downloadF19('xml');
     await timePromise(30000);
 
-    await browser.clear(timers);
+    await browser.clear(timers, false);
 
     operateF19();
 };

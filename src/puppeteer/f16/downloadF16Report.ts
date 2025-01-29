@@ -14,8 +14,8 @@ export const downloadF16Report = async (date: FormDateT, vesselsArray: string[])
     const recurseCb = async () => {
         const timers: NodeJS.Timeout[] = [];
 
-        const res = await login(settings);
-        if (!res) return 'no_login';
+        const loginStatus = await login(settings);
+        if (!loginStatus) return 'no_login';
 
         let currentId = vessels[0];
         console.log(currentId);
@@ -23,6 +23,7 @@ export const downloadF16Report = async (date: FormDateT, vesselsArray: string[])
         for await (const id of vessels) {
             try {
                 console.log(id);
+
                 currentId = id;
                 await downloadFile({
                     url: `https://mon.cfmc.ru/ReportViewer.aspx?Report=34&IsAdaptive=false&VesselShipId=${id}&StartDate=${date.start}&EndDate=${date.end}`,
@@ -31,19 +32,18 @@ export const downloadF16Report = async (date: FormDateT, vesselsArray: string[])
                     timeout: 200000,
                 });
             } catch (e) {
-                if (e.message === 'error_restart') {
-                    vessels = vessels.slice(vessels.indexOf(currentId));
-                    await browser.clear(timers);
-                    await recurseCb();
+                console.log(e.message);
 
-                    return;
-                }
+                vessels = vessels.slice(vessels.indexOf(currentId));
+                bot.sendLog('F16 report not downloaded, restart ' + 'on vessel id ' + id);
 
-                bot.sendSSDLog('error occur' + e.message + 'on vessel id ' + id);
+                await browser.clear(timers, true);
+                await recurseCb();
+                return;
             }
         }
 
-        await browser.clear(timers);
+        await browser.clear(timers, false);
 
         // reduce ssd all together
         const ssdPart = moveF16();
@@ -54,9 +54,9 @@ export const downloadF16Report = async (date: FormDateT, vesselsArray: string[])
         ssd.ssd.push(...ssdPart.ssd);
     };
 
-    const status = await recurseCb();
-    if (status === 'no_login') return false;
+    const loginStatus = await recurseCb();
+    if (loginStatus === 'no_login') return false;
 
-    bot.sendSSDLog('SSD uploaded successfuly');
+    bot.sendLogDated('SSD uploaded successfuly');
     return ssd;
 };

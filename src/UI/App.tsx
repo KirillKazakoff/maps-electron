@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { observer } from 'mobx-react-lite';
-import { Osm } from './Osm';
+import { OsmUI } from './OsmUI';
 import PowerAUI from './PowerAUI';
 import Cerber from './Cerber';
 
@@ -26,7 +26,7 @@ export const App = observer(() => {
     let Output: () => JSX.Element;
 
     if (tab === 'osm') {
-        Output = Osm;
+        Output = OsmUI;
     }
     if (tab === 'power automate') {
         Output = PowerAUI;

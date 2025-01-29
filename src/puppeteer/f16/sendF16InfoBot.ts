@@ -53,7 +53,7 @@ export const sendF16InfoBot = (inputSSD: SSDInfo) => {
 
         // prettier-ignore
         const reportStr = `
-<b>${vessel_name}</b> ${isOutdated ? '(\nСТАРАЯ ДАТА ССД)' : ''}
+<b>${vessel_name}</b> ${isOutdated ? '\n(НЕТ НОВЫХ ССД)' : ''}
 <i>${date} - ${status}</i> 
 <i>${destinationStr}</i>
 ${inputAll ? `\n<i>Вылов\n</i><code>${inputAll}</code>` : ''}${inputAll ? `\n<i>Выпуск\n</i><code>${detailsAll}</code>` : ''}${detailsTotalAll ? `\n<i>Бортовая\n</i><code>${detailsTotalAll}</code>` : ''} \n\n`;
