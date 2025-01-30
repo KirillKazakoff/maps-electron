@@ -1,7 +1,11 @@
-import { ProductionInput } from '../../../api/models';
-import { SSDReportT } from './parseSSD';
+import { SSDReportT } from './parseInfo';
 
-export const parseProdInput = (id_ssd: string, ssdJson: SSDReportT) => {
+export type ProductionInputT = {
+    name: string;
+    total: number;
+};
+
+export const parseProdInput = (ssdJson: SSDReportT) => {
     const pathToJson = ssdJson?.Subreport1[0]?.Report[0]?.Tablix8[0];
 
     if (!pathToJson) return [];
@@ -9,10 +13,10 @@ export const parseProdInput = (id_ssd: string, ssdJson: SSDReportT) => {
         pathToJson.Details6_Collection[0].Details6[0].Tablix2[0].Сведения_Collection[0]
             .Сведения;
 
-    const res = productionRawJson.reduce<ProductionInput[]>((total, input) => {
+    const res = productionRawJson.reduce<ProductionInputT[]>((total, input) => {
         const [name, id, totalAmount] = Object.values(input).map((val) => val[0]);
 
-        total.push({ name, id_ssd, total: +totalAmount });
+        total.push({ name, total: +totalAmount });
         return total;
     }, []);
 

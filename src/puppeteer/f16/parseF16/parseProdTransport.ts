@@ -1,6 +1,6 @@
 import { ProductionTransport } from '../../../api/models';
 import { groupify } from '../../../utils/groupify';
-import { SSDReportT } from './parseSSD';
+import { SSDReportT } from './parseInfo';
 
 type ProductionsTransport = { [key: string]: ProductionTransport };
 

@@ -1,21 +1,22 @@
 /* eslint-disable no-useless-escape */
-import { SSD } from '../../../api/models';
 import { ReportT } from './parseF16';
+import { parseMeteo } from './parseMeteo';
+import { ProductionInputT } from './parseProdInput';
 
 // eslint-disable-next-line no-useless-escape
 const rgBracket = /[\(\)]/;
 export type SSDReportT =
     ReportT['Report']['Tablix1'][0]['SSD_DATE_Collection'][0]['SSD_DATE'][0];
 
-export const parseSSD = (ssd: SSDReportT) => {
-    const header = ssd.Textbox33[0];
+export const parseInfo = (json: SSDReportT, input: ProductionInputT[]) => {
+    const header = json.Textbox33[0];
     const headerSpaced = header.split(' ');
 
     // statusParsed
     const statusToken = headerSpaced[headerSpaced.length - 1].toLocaleLowerCase();
     let status = 'НЕИЗВЕСТЕН';
     let placeName = '';
-    const destinationReg = ssd.Textbox4[0].split(
+    const destinationReg = json.Textbox4[0].split(
         /(пункт следования).([\- \d]+)(.+)(ож. приход).([\d{2}\.]+).(.+)/
     );
 
@@ -65,7 +66,7 @@ export const parseSSD = (ssd: SSDReportT) => {
 
     const isTransport = headerSpaced[9] === 'ТР';
 
-    const ssdParsed: SSD = {
+    return {
         id,
         date,
         vessel_name: name,
@@ -76,7 +77,9 @@ export const parseSSD = (ssd: SSDReportT) => {
         coordinates,
         status,
         destination,
+        isTransport,
+        isMeteo: parseMeteo(json, input),
     };
-
-    return { ssdParsed, isTransport };
 };
+
+export type SSDInfoT = ReturnType<typeof parseInfo>;

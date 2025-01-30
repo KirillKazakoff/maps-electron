@@ -1,43 +1,26 @@
-import { vessels } from '../fsModule/readConfig';
-import { SSDObjectedT } from '../../api/models';
 import { bot } from '../../telegramBot/bot';
-import { SSDInfo } from './parseF16/parseF16';
+import { ParsedSSDT } from './parseF16/parseF16';
 import { DateTime } from 'luxon';
 
-export const sendF16InfoBot = (inputSSD: SSDInfo) => {
-    const ssdList: SSDObjectedT[] = [];
+export const sendF16InfoBot = (f16Array: ParsedSSDT[][]) => {
+    const lastSSD = f16Array.map((f16) => f16[f16.length - 1]);
 
-    vessels.company.forEach((vessel) => {
-        const ssdFiltered = inputSSD.ssd.filter((s) => s.vessel_id === vessel);
-        const ssdInfo = ssdFiltered[ssdFiltered.length - 1];
+    const infoReport = lastSSD.reduce((total, ssd) => {
+        const { vessel_name, date, destination, isMeteo } = ssd.info;
+        let { status } = ssd.info;
+        const { input, output } = ssd.production;
 
-        if (!ssdInfo) return;
-
-        const input = inputSSD.productionInput.filter((s) => s.id_ssd === ssdInfo.id);
-
-        const details = inputSSD.productionDetails.filter((s) => s.id_ssd === ssdInfo.id);
-
-        const ssd = { ssdInfo, input, details };
-
-        ssdList.push(ssd);
-    });
-
-    // console.log(ssdList);
-
-    const infoReport = ssdList.reduce((total, ssd) => {
-        const { vessel_name, date, status, destination } = ssd.ssdInfo;
-
-        const detailsAll = ssd.details
+        const outputCurrent = output
             .map((d) => d.name + '\n' + d.sort + ' - ' + d.current + ' тн.' + '\n')
             .join('');
 
-        const detailsTotalAll = ssd.details
+        const outputOnBoard = output
             .map((d) => d.name + '\n' + d.sort + ' - ' + d.total + ' тн.' + '\n')
             .join('');
 
-        let inputAll = ssd.input.map((i) => i.name + ' ' + i.total + ' тн.' + '\n').join('');
-        const totalInputCount = ssd.input.reduce<number>((total, i) => total + +i.total, 0);
-        if (!totalInputCount) inputAll = '';
+        let inputTotal = input.map((i) => i.name + ' ' + i.total + ' тн.' + '\n').join('');
+        const totalInputCount = input.reduce<number>((total, i) => total + +i.total, 0);
+        if (!totalInputCount) inputTotal = '';
 
         let destinationStr = '';
         if (status === 'СЛЕДУЕТ В ПОРТ' || status === 'СЛЕДУЕТ НА ПРОМЫСЕЛ') {
@@ -47,16 +30,19 @@ export const sendF16InfoBot = (inputSSD: SSDInfo) => {
             destinationStr = destination.placeName;
         }
 
-        // checkDateOutdate Fn
+        // check date outdate
         const dateYesterday = DateTime.now().minus({ day: 1 }).toFormat('dd.MM.yyyy');
-        const isOutdated = dateYesterday !== ssd.ssdInfo.date;
+        const isOutdated = dateYesterday !== ssd.info.date;
+
+        // check meteo
+        if (isMeteo) status = `${status} (ПРОСТОИ МЕТЕО)`;
 
         // prettier-ignore
         const reportStr = `
 <b>${vessel_name}</b> ${isOutdated ? '\n(НЕТ НОВЫХ ССД)' : ''}
 <i>${date} - ${status}</i> 
 <i>${destinationStr}</i>
-${inputAll ? `\n<i>Вылов\n</i><code>${inputAll}</code>` : ''}${inputAll ? `\n<i>Выпуск\n</i><code>${detailsAll}</code>` : ''}${detailsTotalAll ? `\n<i>Бортовая\n</i><code>${detailsTotalAll}</code>` : ''} \n\n`;
+${inputTotal ? `\n<i>Вылов\n</i><code>${inputTotal}</code>` : ''}${inputTotal ? `\n<i>Выпуск\n</i><code>${outputCurrent}</code>` : ''}${outputOnBoard ? `\n<i>Бортовая\n</i><code>${outputOnBoard}</code>` : ''} \n\n`;
 
         total += reportStr;
         return total;

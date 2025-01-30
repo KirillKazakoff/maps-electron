@@ -1,16 +1,22 @@
-import { ProductionDetails, SSD } from '../../../api/models';
-import { SSDReportT } from './parseSSD';
+import { SSDReportT } from './parseInfo';
 
-export const parseDetails = (ssdJson: SSDReportT, ssdParsed: SSD) => {
+export type ProductionOutputT = {
+    name: string;
+    current: number;
+    total: number;
+    sort: string;
+};
+
+export const parseProdOutput = (ssdJson: SSDReportT) => {
     const detailsCurrentCollection = ssdJson.Tablix9[0]?.Details7_Collection[0];
     const detailsTotal = ssdJson.Tablix11[0].Details9_Collection[0].Details9;
 
-    let res: ProductionDetails[] = [];
+    let res: ProductionOutputT[] = [];
 
     if (!detailsCurrentCollection) {
         if (!detailsTotal) return [];
 
-        res = detailsTotal.reduce<ProductionDetails[]>((total, details) => {
+        res = detailsTotal.reduce<ProductionOutputT[]>((total, details) => {
             const resArr = Object.values(details).map((detail) => detail[0]);
 
             const [name, id, current, suffix, type] = resArr;
@@ -21,8 +27,7 @@ export const parseDetails = (ssdJson: SSDReportT, ssdParsed: SSD) => {
             const sort = nameArr.pop();
             const nameParsed = nameArr.join(' ');
 
-            const obj: ProductionDetails = {
-                id_ssd: ssdParsed.id,
+            const obj: ProductionOutputT = {
                 name: nameParsed,
                 current: 0,
                 total: +current,
@@ -42,7 +47,7 @@ export const parseDetails = (ssdJson: SSDReportT, ssdParsed: SSD) => {
     const detailsCurrent = Object.values(detailsCurrentCollection.Details7);
 
     // for vessel-catcher
-    res = detailsCurrent.reduce<ProductionDetails[]>((total, details) => {
+    res = detailsCurrent.reduce<ProductionOutputT[]>((total, details) => {
         const resArr = Object.values(details).map((detail) => detail[0]);
 
         const [name, id, current, suffix, type] = resArr;
@@ -59,8 +64,7 @@ export const parseDetails = (ssdJson: SSDReportT, ssdParsed: SSD) => {
         const sort = nameArr.pop();
         const nameParsed = nameArr.join(' ');
 
-        const obj: ProductionDetails = {
-            id_ssd: ssdParsed.id,
+        const obj: ProductionOutputT = {
             name: nameParsed,
             current: +current,
             total: totalCount,
@@ -71,6 +75,5 @@ export const parseDetails = (ssdJson: SSDReportT, ssdParsed: SSD) => {
         return total;
     }, []);
 
-    console.log(res);
     return res;
 };

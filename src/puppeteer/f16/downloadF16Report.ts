@@ -5,11 +5,11 @@ import { login } from '../armBrowser/login';
 import { moveF16 } from './moveF16';
 import { bot } from '../../telegramBot/bot';
 import { settings } from '../fsModule/readConfig';
-import { initSSDInfo } from './parseF16/parseF16';
+import { ParsedSSDT } from './parseF16/parseF16';
 
 export const downloadF16Report = async (date: FormDateT, vesselsArray: string[]) => {
     let vessels = Array.from(new Set(vesselsArray));
-    const ssd = initSSDInfo();
+    const f16Data: ParsedSSDT[][] = [];
 
     const recurseCb = async () => {
         const timers: NodeJS.Timeout[] = [];
@@ -20,6 +20,7 @@ export const downloadF16Report = async (date: FormDateT, vesselsArray: string[])
         let currentId = vessels[0];
         console.log(currentId);
 
+        // download f16 reports by vessel id list
         for await (const id of vessels) {
             try {
                 console.log(id);
@@ -32,8 +33,7 @@ export const downloadF16Report = async (date: FormDateT, vesselsArray: string[])
                     timeout: 200000,
                 });
             } catch (e) {
-                console.log(e.message);
-
+                // if error_restart occurs while download file
                 vessels = vessels.slice(vessels.indexOf(currentId));
                 bot.sendLog('F16 report not downloaded, restart ' + 'on vessel id ' + id);
 
@@ -46,17 +46,13 @@ export const downloadF16Report = async (date: FormDateT, vesselsArray: string[])
         await browser.clear(timers, false);
 
         // reduce ssd all together
-        const ssdPart = moveF16();
-        ssd.fileName = ssdPart.fileName;
-
-        ssd.productionDetails.push(...ssdPart.productionDetails);
-        ssd.productionInput.push(...ssdPart.productionInput);
-        ssd.ssd.push(...ssdPart.ssd);
+        const f16DataPart = moveF16();
+        f16Data.push(...f16DataPart);
     };
 
     const loginStatus = await recurseCb();
     if (loginStatus === 'no_login') return false;
 
     bot.sendLogDated('SSD uploaded successfuly');
-    return ssd;
+    return f16Data;
 };

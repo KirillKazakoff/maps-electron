@@ -1,5 +1,5 @@
 import { Reserve } from '../../../api/models';
-import { SSDReportT } from './parseSSD';
+import { SSDReportT } from './parseInfo';
 
 export const parseReserve = (id_ssd: string, ssdJson: SSDReportT) => {
     const reserveJson = ssdJson.Tablix7[0].Details5_Collection[0].Details5;

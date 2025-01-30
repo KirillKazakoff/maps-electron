@@ -1,59 +1,36 @@
 import reportJson from '../../../filesDebug/reportNew.json';
-import {
-    ProductionInput,
-    SSD,
-    ProductionDetails,
-    Reserve,
-    Bait,
-    ProductionTransport,
-} from '../../../api/models';
-import { parseSSD } from './parseSSD';
-import { parseDetails } from './parseDetails';
-import { parseProdInput } from './parseProdInput';
+import { parseInfo, SSDInfoT } from './parseInfo';
+import { parseProdOutput, ProductionOutputT } from './parseProdOutput';
+import { parseProdInput, ProductionInputT } from './parseProdInput';
 
 export type ReportT = typeof reportJson;
 
-export const initSSDInfo = () => ({
-    ssd: <SSD[]>[],
-    productionDetails: <ProductionDetails[]>[],
-    productionInput: <ProductionInput[]>[],
-    productionTransport: <ProductionTransport[]>[],
-    reserve: <Reserve[]>[],
-    bait: <Bait[]>[],
-    fileName: '',
-});
-export type SSDInfo = ReturnType<typeof initSSDInfo>;
+export type ParsedSSDT = {
+    info: SSDInfoT;
+    production: {
+        input: ProductionInputT[];
+        output: ProductionOutputT[];
+    };
+};
 
 export const parseF16 = (report: ReportT) => {
-    const parsedObj = initSSDInfo();
-
+    // check if empty report; destructure variable
     if (!report?.Report?.Tablix1) return null;
     const { SSD_DATE_Collection } = report.Report.Tablix1[0];
     if (!SSD_DATE_Collection) return null;
 
     const { SSD_DATE } = SSD_DATE_Collection[0];
 
-    const reports = SSD_DATE.reduce<SSDInfo>((total, ssdJson) => {
-        const { ssdParsed } = parseSSD(ssdJson);
-        total.ssd.push(ssdParsed);
+    // reduce and parse report
+    const parsedSSD = SSD_DATE.reduce<ParsedSSDT[]>((total, json) => {
+        const output = parseProdOutput(json);
+        const input = parseProdInput(json);
+        const info = parseInfo(json, input);
 
-        const productionDetails = parseDetails(ssdJson, ssdParsed);
-        total.productionDetails.push(...productionDetails);
-
-        const productionInput = parseProdInput(ssdParsed.id, ssdJson);
-        total.productionInput.push(...productionInput);
-
-        // const productionTransport = parseProdTransport(ssdParsed.id, ssdJson);
-        // total.productionTransport.push(...productionTransport);
-
-        // const reserve = parseReserve(ssdParsed.id, ssdJson);
-        // total.reserve.push(reserve);
-
-        // const bait = parseBait(ssdParsed.id, ssdJson);
-        // total.bait.push(...bait);
+        total.push({ info, production: { input, output } });
 
         return total;
-    }, parsedObj);
+    }, []);
 
-    return reports;
+    return parsedSSD;
 };

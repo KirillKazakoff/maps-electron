@@ -31,21 +31,21 @@ export const setOsmIpc = (powerIpc: PowerIpcT) => {
     });
     ipcMain.on('sendXMLF16', () => {
         readConfig();
-        const ssd = moveF16();
-        if (ssd.ssd.length > 0) sendF16InfoBot(ssd);
+        const f16Data = moveF16();
+        sendF16InfoBot(f16Data);
     });
-
     const sendF16CompanyPlanner = async () => {
         readConfig();
         const date = calcARMDateFromNow();
-        const ssd = await downloadF16Report(date, vessels.company);
-        if (!ssd) return;
+        const f16Data = await downloadF16Report(date, vessels.company);
+        if (!f16Data) return;
 
-        sendF16InfoBot(ssd);
+        sendF16InfoBot(f16Data);
     };
     ipcMain.on('sendF16Company', () => {
         sendF16CompanyPlanner();
     });
+
     // F10
     ipcMain.on('sendF10', () => {
         readConfig();

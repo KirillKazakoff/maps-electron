@@ -1,11 +1,11 @@
-// import { SSD } from '../../../api/models';
-// import { SSDReportT } from './parseSSD';
+import { SSDReportT } from './parseInfo';
+import { ProductionInputT } from './parseProdInput';
 
-// export const parseMeteo = (ssdJson: SSDReportT, ssdParsed: SSD) => {
-//     const isMeteo = ssdJson.Tablix5[0].Details3_Collection[0].Details3.some((details) => {
-//         details.USED_TIME_DESCRIPTION2[0] === 'метео прост. на пром'
-//     })
+export const parseMeteo = (json: SSDReportT, input: ProductionInputT[]) => {
+    const isMeteoDesc = json.Tablix5[0].Details3_Collection[0].Details3.some((details) => {
+        return details.USED_TIME_DESCRIPTION2[0].includes('метео прост. на пром');
+    });
 
-//     if (ssdParsed.)
-
-// };
+    const isMeteo = isMeteoDesc && input.length === 0;
+    return isMeteo;
+};

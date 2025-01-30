@@ -1,5 +1,5 @@
 import { Bait } from '../../../api/models';
-import { SSDReportT } from './parseSSD';
+import { SSDReportT } from './parseInfo';
 
 export const parseBait = (id_ssd: string, ssdJson: SSDReportT) => {
     const detailsTotalJson = ssdJson.Tablix11[0].Details9_Collection[0].Details9;

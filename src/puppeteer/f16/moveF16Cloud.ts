@@ -1,14 +1,14 @@
 import { DateTime } from 'luxon';
-import { SSD } from '../../api/models';
 import { getDirPathes } from '../fsModule/fsPathes';
 import fs from 'fs';
+import { ParsedSSDT } from './parseF16/parseF16';
 
-export const moveF16Cloud = (ssdList: SSD[], oldPath: string) => {
+export const moveF16Cloud = (ssdList: ParsedSSDT[], oldPath: string) => {
     const pathes = getDirPathes();
     const path = pathes.ssd;
     const ssd = ssdList[ssdList.length - 1];
 
-    const dateTime = DateTime.fromFormat(ssd.date, 'dd.MM.yyyy');
+    const dateTime = DateTime.fromFormat(ssd.info.date, 'dd.MM.yyyy');
     const formatedDate = dateTime.toFormat('yyyy-MM-dd');
 
     const cloudSSDNames = fs.readdirSync(`${getDirPathes().ssd}`, {
@@ -27,7 +27,7 @@ export const moveF16Cloud = (ssdList: SSD[], oldPath: string) => {
     // remove if same ssd vessel was before in directory
     const oldSSDNames = cloudSSDNames.filter((dirent) => {
         const id = dirent.name.split(/[_.]/)[3];
-        return id === ssd.vessel_id;
+        return id === ssd.info.vessel_id;
     });
 
     // if (!isStartMonth) {
@@ -38,7 +38,9 @@ export const moveF16Cloud = (ssdList: SSD[], oldPath: string) => {
     // }
 
     // // move ssd to icloud directory
-    // prettier-ignore
-    const newPath = `${path}SSD_${formatedDate}_${ssd.vessel_name.toUpperCase()}_${ssd.vessel_id}.xml`;
+    const { vessel_id, vessel_name } = ssd.info;
+    const newPath = `${path}SSD_${formatedDate}_${vessel_name.toUpperCase()}_${vessel_id}.xml`;
     fs.renameSync(oldPath, newPath);
+
+    console.log('ssd have been sent to the Cloud');
 };
