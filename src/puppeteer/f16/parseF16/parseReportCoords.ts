@@ -36,3 +36,11 @@
 //         return total;
 //     }, []);
 // };
+
+// const coordinates = title.split(' ').reduce<string>((totalC, str, i) => {
+//     if (str.includes('°')) {
+//         totalC += str.split('°').join('.').slice(0, -1);
+//         if (i !== title.length) totalC += ' ';
+//     }
+//     return totalC;
+// }, '');

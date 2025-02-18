@@ -1,5 +1,5 @@
 import { SettingsT } from '../../utils/types';
-import { bot } from '../../telegramBot/bot';
+import { bot } from '../../bot/bot';
 import { timePromise } from '../../utils/time';
 import { browser } from '../browser';
 
@@ -58,9 +58,9 @@ export async function login(settings: SettingsT) {
     } catch (e) {
         // relaunch
         await browser.clear(null, true);
+        bot.log.bot('Error on OSM Login: ' + e.message);
         await login(settings);
 
-        bot.sendLog('error is: ' + e.message);
         return false;
     }
 }

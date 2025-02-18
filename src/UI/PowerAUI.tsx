@@ -14,6 +14,9 @@ export default function PowerAUI() {
                         <ButtonAction id="sendPlannerRegisterMd">
                             Запустить планировщик реестры + РДО
                         </ButtonAction>
+                        <ButtonAction id="sendUnsignedReestr">
+                            Отправить список неподписанных документов
+                        </ButtonAction>
                     </ButtonsBlock>
                     <ButtonsBlock isLast>
                         <ButtonAction id="sendUpdateMd">Обновить базу ССД</ButtonAction>
@@ -21,6 +24,9 @@ export default function PowerAUI() {
                             Обновить модель данных
                         </ButtonAction>
                         <ButtonAction id="sendUpdateQuotes">Обновить квоты</ButtonAction>
+                        <ButtonAction id="sendUpdateF19QuerryReport">
+                            Обновить отчет на основе F19
+                        </ButtonAction>
                         <ButtonAction id="sendReportDebug">Отправить отчет TG</ButtonAction>
                         <ButtonAction id="sendUpdateModelAll">
                             База -- Модель -- Квоты -- TG

@@ -3,7 +3,7 @@ import { settings } from '../fsModule/readConfig';
 import { login } from '../armBrowser/login';
 import { downloadFile } from '../armBrowser/downloadFile/downloadFile';
 import { FormDateT } from '../../UI/stores/settingsStore';
-import { bot } from '../../telegramBot/bot';
+import { bot } from '../../bot/bot';
 import { operateF19 } from './operateF19';
 import { timePromise } from '../../utils/time';
 
@@ -21,7 +21,7 @@ export const downloadF19Report = async (date: FormDateT) => {
                 timeout: 600000,
             });
         } catch (e) {
-            bot.sendLogDated('F19 Report not downloaded, trying again');
+            bot.log.bot('F19 Report not downloaded, trying again');
             await browser.clear(timers, true);
             await downloadF19Report(date);
 

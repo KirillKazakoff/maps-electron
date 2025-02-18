@@ -1,5 +1,11 @@
 /* eslint-disable no-param-reassign */
-export function groupify<ReturnT>(total: any, initObj: any, code: string | number): ReturnT {
+
+// creates associative array prop by key if no such key was before in dictionary
+export function groupify<ReturnT>(
+    total: { [key: string]: ReturnT },
+    initObj: ReturnT,
+    code: string | number
+): ReturnT {
     let group = total[code];
 
     if (!group) {

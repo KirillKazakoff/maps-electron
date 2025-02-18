@@ -1,5 +1,5 @@
 // configTypes
-import config from 'C:\\Users\\admin\\iCloudDrive\\Конспираторы\\ОВЭД\\БД Производство\\0_Аналитика ССД\\Конфигурация\\config-new.json';
+import config from 'C:\\Users\\admin\\iCloudDrive\\Конспираторы\\ОВЭД\\БД Производство\\0_Аналитика ССД\\Конфигурация\\config.json';
 
 export type ConfigT = typeof config;
 export type VesselsT = ConfigT['vessels'];

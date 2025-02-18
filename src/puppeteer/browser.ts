@@ -1,7 +1,7 @@
 import puppeteer from 'puppeteer-extra';
 import { Browser } from 'puppeteer';
 import { timePromise } from '../utils/time';
-import { bot } from '../telegramBot/bot';
+import { bot } from '../bot/bot';
 
 class BrowserC {
     instance: Browser | null;
@@ -29,10 +29,9 @@ class BrowserC {
     }
 
     async clear(timers: NodeJS.Timer[], isError: boolean) {
-        bot.sendLog(this.errorTimes);
-
         // refresh if no error
         if (isError) {
+            bot.log.bot(`Error count: ${this.errorTimes}`);
             this.errorTimes += 1;
         } else {
             this.errorTimes = 0;

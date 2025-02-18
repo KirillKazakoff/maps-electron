@@ -1,5 +1,5 @@
 import { ipcMain } from 'electron';
-import { bot } from '../telegramBot/bot';
+import { bot } from '../bot/bot';
 import { FormDateT } from '../UI/stores/settingsStore';
 import { calcARMDateFromNow, calcARMDateNow } from '../utils/date';
 import { timePromise } from '../utils/time';
@@ -31,7 +31,7 @@ export const setOsmIpc = (powerIpc: PowerIpcT) => {
     });
     ipcMain.on('sendXMLF16', () => {
         readConfig();
-        const f16Data = moveF16();
+        const f16Data = moveF16('debug');
         sendF16InfoBot(f16Data);
     });
     const sendF16CompanyPlanner = async () => {
@@ -58,18 +58,26 @@ export const setOsmIpc = (powerIpc: PowerIpcT) => {
 
     // osmLoad planner
     const cbPlanner = async () => {
-        readConfig();
-        bot.sendLog('Osm reports load started');
+        try {
+            readConfig();
+            bot.log.bot('Osm reports load started');
 
-        const date = calcARMDateFromNow();
+            const date = calcARMDateFromNow();
 
-        await downloadF16Report(date, [...vessels.main, ...vessels.special]);
-        await downloadF10Report(calcARMDateNow(), false);
-        await downloadF19Report(date);
+            await downloadF16Report(date, [...vessels.main, ...vessels.special]);
+            await downloadF10Report(calcARMDateNow(), false);
+            await downloadF19Report(date);
 
-        await timePromise(100000);
-        // update md
-        await powerIpc.updateModelAll();
+            bot.log.bot('end loading osm');
+            await timePromise(120000);
+            bot.log.bot('start power automate script');
+
+            // update md
+            await powerIpc.updateModelAll();
+        } catch (e) {
+            console.error(e);
+            bot.log.bot('UNEXPECTED ERROR in OSM api: ' + e.message);
+        }
     };
     ipcMain.on('sendManual', () => cbPlanner());
 
@@ -81,7 +89,7 @@ export const setOsmIpc = (powerIpc: PowerIpcT) => {
     };
 
     ipcMain.on('sendPlanner', (e, schedule) => {
-        bot.sendLog('bot osm load planned on ' + schedule);
+        bot.log.bot('bot osm load planned on ' + schedule);
 
         if (returnObj.taskOsm) returnObj.taskOsm.stop();
 

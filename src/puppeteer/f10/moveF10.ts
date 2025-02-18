@@ -1,6 +1,6 @@
 import fs from 'fs';
 import { getDirPathes } from '../fsModule/fsPathes';
-import { bot } from '../../telegramBot/bot';
+import { bot } from '../../bot/bot';
 
 const xmlPathes = getDirPathes();
 
@@ -18,6 +18,6 @@ export const moveF10 = (date: string, isFormDate: boolean) => {
         const newPath = `${pathDir}\\${date}.xlsx`;
         fs.renameSync(filePath, newPath);
 
-        bot.sendLog(`F10 quotes report ${date} loaded`);
+        bot.log.bot(`F10 quotes report ${date} loaded`);
     });
 };

@@ -2,7 +2,7 @@ import { browser } from '../browser';
 import { login } from '../armBrowser/login';
 import { settings } from '../fsModule/readConfig';
 import { downloadFile } from '../armBrowser/downloadFile/downloadFile';
-import { bot } from '../../telegramBot/bot';
+import { bot } from '../../bot/bot';
 import { f10Browser } from './f10Browser';
 import { moveF10 } from './moveF10';
 import { FormDateT } from '../../UI/stores/settingsStore';
@@ -40,7 +40,7 @@ export const downloadF10Report = async (date: FormDateT, isFormDate: boolean) =>
 
             moveF10(current.toFormat(format), isFormDate);
         } catch (e) {
-            bot.sendLogDated('F10 Report not downloaded, trying again');
+            bot.log.botDated('F10 Report not downloaded, trying again');
             await browser.clear(timers, true);
 
             await downloadF10Report(

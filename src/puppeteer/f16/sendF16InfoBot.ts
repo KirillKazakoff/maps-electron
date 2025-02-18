@@ -1,52 +1,78 @@
-import { bot } from '../../telegramBot/bot';
+import { bot } from '../../bot/bot';
 import { ParsedSSDT } from './parseF16/parseF16';
-import { DateTime } from 'luxon';
 
 export const sendF16InfoBot = (f16Array: ParsedSSDT[][]) => {
     const lastSSD = f16Array.map((f16) => f16[f16.length - 1]);
+    const sortedSSD = lastSSD.sort((prev, next) => {
+        if (next.info.isOutdated || next.info.status.main === 'НЕИЗВЕСТЕН') {
+            return -1;
+        }
+    });
 
-    const infoReport = lastSSD.reduce((total, ssd) => {
-        const { vessel_name, date, destination, isMeteo } = ssd.info;
-        let { status } = ssd.info;
+    const infoReport = sortedSSD.reduce((total, ssd) => {
+        const { vessel_name, date, isOutdated, trapData } = ssd.info;
+        const { main, place, event: eventArray, destination } = ssd.info.status;
         const { input, output } = ssd.production;
 
-        const outputCurrent = output
-            .map((d) => d.name + '\n' + d.sort + ' - ' + d.current + ' тн.' + '\n')
+        const outputCurrent = output.current
+            .map((d) => `${d.name} ${d.sort} - ${d.total} тн.\n`)
             .join('');
 
-        const outputOnBoard = output
-            .map((d) => d.name + '\n' + d.sort + ' - ' + d.total + ' тн.' + '\n')
+        const outputOnBoard = output.board
+            .map((d) => `${d.name} ${d.sort} - ${d.total} тн.\n`)
             .join('');
 
-        let inputTotal = input.map((i) => i.name + ' ' + i.total + ' тн.' + '\n').join('');
+        // input production description
+        let inputTotal = input.map((i) => `${i.name} ${i.total} тн.\n`).join('');
         const totalInputCount = input.reduce<number>((total, i) => total + +i.total, 0);
         if (!totalInputCount) inputTotal = '';
 
-        let destinationStr = '';
-        if (status === 'СЛЕДУЕТ В ПОРТ' || status === 'СЛЕДУЕТ НА ПРОМЫСЕЛ') {
-            destinationStr = destination.placeName + '\nETA: ' + destination.eta;
-        }
-        if (status === 'В ПОРТУ' || status === 'НА ПРОМЫСЛЕ') {
-            destinationStr = destination.placeName;
+        // trap info description
+        let trapStr = '';
+        if (trapData) {
+            trapStr = trapData.map((t) => `${t.desc}: ${t.amountStr}\n`).join('');
         }
 
-        // check date outdate
-        const dateYesterday = DateTime.now().minus({ day: 1 }).toFormat('dd.MM.yyyy');
-        const isOutdated = dateYesterday !== ssd.info.date;
+        // event time list description
+        const event = eventArray.reduce<string>((total, e, i) => {
+            total += `${e.type} - ${e.time.toFixed(1)}ч`;
+            if (i !== total.length - 1) total += '\n';
+            return total;
+        }, '');
 
-        // check meteo
-        if (isMeteo) status = `${status} (ПРОСТОИ МЕТЕО)`;
+        // object with checks
+        const is = {
+            event: event && !event.includes('НЕ ОПРЕДЕЛЕН'),
+            going: main === 'СЛЕДУЕТ В ПОРТ' || main === 'СЛЕДУЕТ НА ПРОМЫСЕЛ',
+            staying: main === 'В ПОРТУ' || main === 'НА ПРОМЫСЛЕ',
+            input: inputTotal,
+            onBoard: outputOnBoard,
+        };
+
+        // prettier-ignore
+        const msg = {  
+            vessel: `${vessel_name}`,
+            outdated: isOutdated ? '\n(НЕТ НОВЫХ ССД)' : '',
+            status: `${date} - ${main}`,
+            destination: is.going ? `\n${place}\nПункт следования: ${destination.place}\nETA: ${destination.eta}` : is.staying ? `\n${place}` : '',
+    
+            // body
+            event: is.event ? `\n\n<b>Операции:</b>\n<i>${event}</i>` : '',
+            input: is.input ? `<b>Вылов:\n</b><i>${inputTotal}${trapStr}</i>` : '',
+            output: is.input ? `\n<b>Выпуск:\n</b><i>${outputCurrent}</i>` : '',
+            onBoard: is.onBoard ? `\n<b>Бортовая:\n</b><i>${outputOnBoard}</i>` : '',
+            separator: isOutdated || main === 'НЕИЗВЕСТЕН' ? '' : '\n\n',
+        }
 
         // prettier-ignore
         const reportStr = `
-<b>${vessel_name}</b> ${isOutdated ? '\n(НЕТ НОВЫХ ССД)' : ''}
-<i>${date} - ${status}</i> 
-<i>${destinationStr}</i>
-${inputTotal ? `\n<i>Вылов\n</i><code>${inputTotal}</code>` : ''}${inputTotal ? `\n<i>Выпуск\n</i><code>${outputCurrent}</code>` : ''}${outputOnBoard ? `\n<i>Бортовая\n</i><code>${outputOnBoard}</code>` : ''} \n\n`;
+<b>${msg.vessel}</b>
+<b>${msg.status}</b><i>${msg.outdated}</i><b>${msg.destination}</b>${msg.event}
+${msg.input}${msg.output}${msg.onBoard}${msg.separator}`;
 
         total += reportStr;
         return total;
     }, '');
 
-    bot.sendLogGroup(infoReport);
+    bot.log.reports(infoReport);
 };

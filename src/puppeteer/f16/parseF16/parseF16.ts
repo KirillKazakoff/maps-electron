@@ -9,7 +9,10 @@ export type ParsedSSDT = {
     info: SSDInfoT;
     production: {
         input: ProductionInputT[];
-        output: ProductionOutputT[];
+        output: {
+            current: ProductionOutputT[];
+            board: ProductionOutputT[];
+        };
     };
 };
 
@@ -25,7 +28,7 @@ export const parseF16 = (report: ReportT) => {
     const parsedSSD = SSD_DATE.reduce<ParsedSSDT[]>((total, json) => {
         const output = parseProdOutput(json);
         const input = parseProdInput(json);
-        const info = parseInfo(json, input);
+        const info = parseInfo(json);
 
         total.push({ info, production: { input, output } });
 

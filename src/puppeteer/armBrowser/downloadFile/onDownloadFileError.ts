@@ -1,4 +1,4 @@
-import { bot } from '../../../telegramBot/bot';
+import { bot } from '../../../bot/bot';
 import { browser } from '../../browser';
 
 export const onDownloadFileError = async (intervalId: any, e: any) => {
@@ -18,7 +18,7 @@ export const onDownloadFileError = async (intervalId: any, e: any) => {
 
     errorsRestart.forEach((option) => {
         if (e.message.includes(option)) {
-            bot.sendLog('RELOAD');
+            bot.log.bot('RELOAD');
             throw new Error('error_restart');
         }
     });
@@ -29,6 +29,6 @@ export const onDownloadFileError = async (intervalId: any, e: any) => {
     }
 
     // on unexpected error occur stop browser work + send log
-    bot.sendLog('Unexpected download file error: ' + e.message);
+    bot.log.bot('Unexpected download file error: ' + e.message);
     await browser.close();
 };

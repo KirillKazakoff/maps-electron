@@ -7,7 +7,7 @@ import { moveF16XmlDownloads } from './moveF16XmlDownloads';
 
 const pathes = getDirPathes();
 
-export const moveF16 = () => {
+export const moveF16 = (status?: 'debug') => {
     moveF16XmlDownloads();
     const f16Array: ParsedSSDT[][] = [];
 
@@ -52,8 +52,10 @@ export const moveF16 = () => {
             return;
         }
 
+        if (status === 'debug') return;
         moveF16Cloud(currentSSD, filePath);
     });
 
+    console.log('ssd have been sent to the Cloud');
     return f16Array;
 };

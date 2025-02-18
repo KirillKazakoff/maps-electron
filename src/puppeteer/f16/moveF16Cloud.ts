@@ -41,6 +41,4 @@ export const moveF16Cloud = (ssdList: ParsedSSDT[], oldPath: string) => {
     const { vessel_id, vessel_name } = ssd.info;
     const newPath = `${path}SSD_${formatedDate}_${vessel_name.toUpperCase()}_${vessel_id}.xml`;
     fs.renameSync(oldPath, newPath);
-
-    console.log('ssd have been sent to the Cloud');
 };

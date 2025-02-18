@@ -3,7 +3,7 @@ import { getDirPathes } from '../fsModule/fsPathes';
 import fs from 'fs';
 import { F19T } from '../../utils/types';
 import { vessels, rewriteConfig } from '../fsModule/readConfig';
-import { bot } from '../../telegramBot/bot';
+import { bot } from '../../bot/bot';
 import { getDateF19Report } from '../../utils/date';
 
 const xmlPathes = getDirPathes();
@@ -66,7 +66,7 @@ export const operateF19 = () => {
         const setVessels = Array.from(new Set(newVessels));
 
         if (setVessels.length > 0) {
-            bot.sendLog('new vessels registered are ' + setVessels.join(' '));
+            bot.log.bot('new vessels registered are ' + setVessels.join(' '));
         }
 
         // fsWrite new vessels
@@ -85,5 +85,5 @@ export const operateF19 = () => {
         }
     });
 
-    bot.sendLogDated(`F19 report xml xlsx loaded`);
+    bot.log.botDated(`F19 report xml xlsx loaded`);
 };

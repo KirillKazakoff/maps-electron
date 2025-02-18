@@ -9,7 +9,6 @@ export const getConfig = (): ConfigT => JSON.parse(fs.readFileSync(configUrl).to
 
 export const readConfig = () => {
     const config = getConfig();
-    // console.log(config);
 
     vessels = config.vessels;
     settings = config.settings;
