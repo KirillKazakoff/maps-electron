@@ -1,16 +1,17 @@
+// import { bot } from '../../bot/bot';
+
+const username = __dirname.split(/[/\\]/)[2];
 // prettier-ignore
-const mainDir ='C:\\Users\\admin\\iCloudDrive\\Конспираторы\\ОВЭД\\БД Производство\\0_Аналитика ССД';
+const firstPart = username === 'admin' ? `C:\\Users\\admin\\iCloudDrive\\` : '\\\\Mac\\iCloud\\';
+const mainDir = `${firstPart}Конспираторы\\ОВЭД\\БД Производство\\0_Аналитика ССД`;
+
 const downloadDir = 'C:\\Users\\admin\\Downloads';
 const pshDir = 'C:\\Users\\admin\\Desktop\\Repo\\maps-electron\\src\\powershell\\';
-
-export const configUrl = mainDir + '\\Конфигурация\\config.json';
 const cloudDir = mainDir + '\\ССД расшиф v2';
 
-export const getUserName = () => {
-    const res = __dirname.split(/[/\\]/)[2];
+export const configUrl = mainDir + '\\Конфигурация\\config.json';
 
-    return res;
-};
+// setTimeout(() => bot.log.bot(username), 5000);
 
 export const getDirPathes = () => {
     return {

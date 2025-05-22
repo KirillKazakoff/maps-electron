@@ -2,24 +2,6 @@ import { DateTime } from 'luxon';
 
 const format = 'dd-MM-yyyy';
 
-export const calcARMDateMonth = (i: number) => {
-    const now = DateTime.now();
-    const start = now.minus({ month: i + 1 }).toFormat(format);
-    const end = now.minus({ month: i }).toFormat(format);
-
-    return { start, end };
-};
-
-export const calcARMDateDay = (settings: { start: number; end: number }) => {
-    const { start, end } = settings;
-    const now = DateTime.now();
-
-    return {
-        start: now.minus({ day: start }).toFormat(format),
-        end: now.minus({ day: end }).toFormat(format),
-    };
-};
-
 export const calcARMDateFromNow = () => {
     const now = DateTime.now();
 
@@ -28,6 +10,13 @@ export const calcARMDateFromNow = () => {
         end: now.minus({ day: 1 }).toFormat(format),
     };
 };
+export const calcARMDateMonth = (dateTime: DateTime) => {
+    return {
+        start: dateTime.minus({ day: 1 }).startOf('month').toFormat(format),
+        end: dateTime.minus({ day: 1 }).toFormat(format),
+    };
+};
+
 export const calcARMDateNow = () => {
     const now = DateTime.now();
 

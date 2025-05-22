@@ -14,8 +14,9 @@ export const sendF16InfoBot = (f16Array: ParsedSSDT[][]) => {
         const { main, place, event: eventArray, destination } = ssd.info.status;
         const { input, output } = ssd.production;
 
+        // prettier-ignore
         const outputCurrent = output.current
-            .map((d) => `${d.name} ${d.sort} - ${d.total} тн.\n`)
+            .map((d) => `${d.name} ${d.sort} - ${d.total} тн.${d.coefficient > 0 ? ` (Коэффициент выпуска: ${d.coefficient}%)` : ''}\n`)
             .join('');
 
         const outputOnBoard = output.board

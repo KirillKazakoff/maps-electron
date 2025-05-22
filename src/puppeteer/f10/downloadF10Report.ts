@@ -17,17 +17,15 @@ export const downloadF10Report = async (date: FormDateT, isFormDate: boolean) =>
     const {
         timeObj: { start, end },
     } = getDateObj().fromDate(date);
-    let current = start;
+    let currentDate = start;
     const format = 'yyyy-MM-dd';
 
-    while (!current.equals(end)) {
-        console.log('cycle goes');
-
+    while (!currentDate.equals(end)) {
         try {
             const page = await f10Browser({
-                url: 'https://mon.cfmc.ru/ReportViewer.aspx?Report=28&IsAdaptive=false&OwnerListId=116124&Date=08-08-2024',
+                url: 'https://mon.cfmc.ru/ReportViewer.aspx?Report=28&IsAdaptive=false&OwnerListId=116124',
                 timers,
-                dateReport: calcDateF10({ isTime: true, dateTime: current }),
+                dateReport: calcDateF10({ isTime: true, dateTime: currentDate }),
             });
             if (!page) throw new Error('error_restart');
 
@@ -38,14 +36,14 @@ export const downloadF10Report = async (date: FormDateT, isFormDate: boolean) =>
                 timeout: 600000,
             });
 
-            moveF10(current.toFormat(format), isFormDate);
+            moveF10(currentDate.toFormat(format), isFormDate);
         } catch (e) {
             bot.log.botDated('F10 Report not downloaded, trying again');
             await browser.clear(timers, true);
 
             await downloadF10Report(
                 {
-                    start: current.toFormat(format),
+                    start: currentDate.toFormat(format),
                     end: end.toFormat(format),
                 },
                 isFormDate
@@ -54,7 +52,7 @@ export const downloadF10Report = async (date: FormDateT, isFormDate: boolean) =>
             return;
         }
 
-        current = current.plus({ day: 1 });
+        currentDate = currentDate.plus({ day: 1 });
     }
 
     await browser.clear(timers, false);

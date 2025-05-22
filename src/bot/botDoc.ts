@@ -68,7 +68,7 @@ export class BotDoc {
 
     async xlsx() {
         const path =
-            'C:\\Users\\admin\\iCloudDrive\\Конспираторы\\ОВЭД\\БД Производство\\0_Аналитика ССД\\ДВ БД\\2025 Вылов выпуск.xlsx';
+            'C:\\Users\\admin\\iCloudDrive\\Конспираторы\\ОВЭД\\БД Производство\\0_Аналитика ССД\\ДВ БД\\2025 Вылов и икра.xlsx';
         await this.doc({ path, type: 'f19Querry', sizeCheck: 150 });
     }
 }

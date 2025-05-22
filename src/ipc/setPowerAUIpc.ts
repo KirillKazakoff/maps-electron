@@ -21,18 +21,18 @@ export const setPowerAUIpc = () => {
     const sendReportsTG = async () => {
         await bot.doc.pdf({ type: 'vessel', name: 'Модель данных' });
         await bot.doc.pdf({ type: 'tech', name: 'Технический отчет' });
-        await bot.doc.pdf({ type: 'crab', name: 'Выпуск краба за сутки' });
-        await bot.doc.xlsx();
+        // await bot.doc.pdf({ type: 'crab', name: 'Выпуск краба за сутки' });
+        // await bot.doc.xlsx();
     };
     // updateDB
     const updateModelAll = async () => {
         try {
             updateMd();
-            await timePromise(385000);
+            await timePromise(400000);
             updateModel();
-            await timePromise(160000);
-            updateF19QueryReport();
-            await timePromise(320000);
+            await timePromise(200000);
+            // updateF19QueryReport();
+            // await timePromise(320000);
             // updateQuotes();
             // await timePromise(550000);
 

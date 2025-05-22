@@ -2,6 +2,7 @@ import reportJson from '../../../filesDebug/reportNew.json';
 import { parseInfo, SSDInfoT } from './parseInfo';
 import { parseProdOutput, ProductionOutputT } from './parseProdOutput';
 import { parseProdInput, ProductionInputT } from './parseProdInput';
+import { modifyCoefficientSpecial } from './modifyCoefficientRoe';
 
 export type ReportT = typeof reportJson;
 
@@ -28,6 +29,8 @@ export const parseF16 = (report: ReportT) => {
     const parsedSSD = SSD_DATE.reduce<ParsedSSDT[]>((total, json) => {
         const output = parseProdOutput(json);
         const input = parseProdInput(json);
+        modifyCoefficientSpecial({ input, output: output.current });
+
         const info = parseInfo(json);
 
         total.push({ info, production: { input, output } });

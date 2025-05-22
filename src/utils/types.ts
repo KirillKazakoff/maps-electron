@@ -3,7 +3,7 @@ import config from 'C:\\Users\\admin\\iCloudDrive\\Конспираторы\\О�
 
 export type ConfigT = typeof config;
 export type VesselsT = ConfigT['vessels'];
-export type SettingsT = ConfigT['settings'];
+export type SettingsT = ConfigT['settings']['main'];
 
 // UtilsTypes
 export type CheckBoxSettingsT = { name: string; isChecked: boolean };

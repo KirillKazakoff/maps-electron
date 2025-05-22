@@ -17,25 +17,22 @@ export const setOsmIpc = (powerIpc: PowerIpcT) => {
     // F19
     ipcMain.on('sendF19', () => {
         readConfig();
-        downloadF19Report(calcARMDateFromNow());
+        downloadF19Report(calcARMDateFromNow(), true);
     });
     ipcMain.on('sendXMLF19', () => {
         readConfig();
-        operateF19();
+        operateF19(true);
+    });
+    ipcMain.on('sendF19Date', (e, date: FormDateT) => {
+        readConfig();
+        downloadF19Report(date, false);
     });
 
     // F16
-    ipcMain.on('sendF16', (e, date: FormDateT) => {
-        readConfig();
-        downloadF16Report(date, [...vessels.main, ...vessels.special]);
-    });
-    ipcMain.on('sendXMLF16', () => {
-        readConfig();
-        const f16Data = moveF16('debug');
-        sendF16InfoBot(f16Data);
-    });
     const sendF16CompanyPlanner = async () => {
         readConfig();
+        bot.log.bot('company vessels ssd report load started');
+
         const date = calcARMDateFromNow();
         const f16Data = await downloadF16Report(date, vessels.company);
         if (!f16Data) return;
@@ -44,6 +41,15 @@ export const setOsmIpc = (powerIpc: PowerIpcT) => {
     };
     ipcMain.on('sendF16Company', () => {
         sendF16CompanyPlanner();
+    });
+    ipcMain.on('sendF16', (e, date: FormDateT) => {
+        readConfig();
+        downloadF16Report(date, [...vessels.main, ...vessels.special]);
+    });
+    ipcMain.on('sendXMLF16', () => {
+        readConfig();
+        const f16Data = moveF16('debug');
+        sendF16InfoBot(f16Data);
     });
 
     // F10
@@ -66,7 +72,7 @@ export const setOsmIpc = (powerIpc: PowerIpcT) => {
 
             await downloadF16Report(date, [...vessels.main, ...vessels.special]);
             await downloadF10Report(calcARMDateNow(), false);
-            await downloadF19Report(date);
+            await downloadF19Report(date, true);
 
             bot.log.bot('end loading osm');
             await timePromise(120000);

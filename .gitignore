@@ -76,6 +76,9 @@ typings/
 # Serverless directories
 .serverless/
 
+out.rar
+
+
 # FuseBox cache
 .fusebox/
 
@@ -94,3 +97,7 @@ out/
 config.json
 
 filesDebug
+
+mailMessages.json
+
+mailUIDL.json

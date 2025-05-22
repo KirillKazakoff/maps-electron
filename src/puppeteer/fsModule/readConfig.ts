@@ -11,11 +11,12 @@ export const readConfig = () => {
     const config = getConfig();
 
     vessels = config.vessels;
-    settings = config.settings;
+    settings = config.settings.main;
 };
 
 export const rewriteConfig = () => {
     const config = getConfig();
+
     config.vessels = vessels;
     const json = JSON.stringify(config);
     fs.writeFileSync(configUrl, json);

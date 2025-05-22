@@ -4,6 +4,7 @@ export type ProductionOutputT = {
     name: string;
     total: number;
     sort: string;
+    coefficient: number;
 };
 
 const prodReplaceDictionary = {
@@ -16,9 +17,7 @@ const prodNameReplace = (name: string) => {
 
     Object.entries(prodReplaceDictionary).forEach(([key, value]) => {
         if (name.includes(key)) {
-            console.log('KEY: ', key, '-----', 'VALUE: ', name);
             newName = value;
-            console.log(newName);
         }
     });
 
@@ -43,6 +42,7 @@ const parseTable = (table: string | { [key: string]: string[] }[]) => {
             name: prodNameReplace(nameParsed),
             total: +value,
             sort,
+            coefficient: 0,
         };
         total.push(obj);
 

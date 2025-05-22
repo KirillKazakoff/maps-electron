@@ -35,6 +35,9 @@ export const FormDate = observer(({ date }: PropsT) => {
             <ButtonAction cls="form-btn" id="sendF10Date" params={[date]}>
                 Загрузить по дате F10
             </ButtonAction>
+            <ButtonAction cls="form-btn" id="sendF19Date" params={[date]}>
+                Загрузить по дате F19
+            </ButtonAction>
         </form>
     );
 });

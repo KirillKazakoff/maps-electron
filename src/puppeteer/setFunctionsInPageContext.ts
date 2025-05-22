@@ -5,7 +5,7 @@ import { checkLiNoValue, checkPageStatusLoading } from './armBrowser/functionsOs
 import { fetchVessels, fetchZones } from '../api/fetchData/arm';
 import { checkPageStatusLoadingCerber, getCerberStatus } from './cerber/functionsCerberDOM';
 
-type UnknownFnT = (...args: any) => any;
+type UnknownFnT = (...args: never) => unknown;
 type EvaluatedT<FnT extends UnknownFnT> = (
     ...params: Parameters<FnT>
 ) => Promise<ReturnType<FnT>>;

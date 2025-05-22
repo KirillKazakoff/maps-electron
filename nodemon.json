@@ -1,6 +1,8 @@
 {
     "ignore": [
-        "assets/"
+        "assets/",
+        "src/nodeMailer/mailUIDL.json",
+        "src/nodeMailer/mailMessages.json"
     ],
     "ext": "ts, html, json"
 }

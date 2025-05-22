@@ -8,7 +8,7 @@ import { getDateF19Report } from '../../utils/date';
 
 const xmlPathes = getDirPathes();
 
-export const operateF19 = () => {
+export const operateF19 = (isUpdateConfig: boolean) => {
     const fileNames = fs.readdirSync(`${xmlPathes.downloads}`, {
         withFileTypes: true,
     });
@@ -26,6 +26,8 @@ export const operateF19 = () => {
             fs.renameSync(filePath, filePathNew);
             return;
         }
+
+        if (!isUpdateConfig) return;
 
         // add new vessels to config
         const xml = fs.readFileSync(filePath);
