@@ -34,7 +34,10 @@ export const setOsmIpc = (powerIpc: PowerIpcT) => {
         bot.log.bot('company vessels ssd report load started');
 
         const date = calcARMDateFromNow();
-        const f16Data = await downloadF16Report(date, vessels.company);
+        const f16Data = await downloadF16Report(date, [
+            ...vessels.company,
+            ...vessels.transport,
+        ]);
         if (!f16Data) return;
 
         sendF16InfoBot(f16Data);
@@ -48,7 +51,7 @@ export const setOsmIpc = (powerIpc: PowerIpcT) => {
     });
     ipcMain.on('sendXMLF16', () => {
         readConfig();
-        const f16Data = moveF16('debug');
+        const f16Data = moveF16();
         sendF16InfoBot(f16Data);
     });
 

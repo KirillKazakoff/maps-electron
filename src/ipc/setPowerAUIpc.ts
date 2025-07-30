@@ -4,7 +4,10 @@ import { startProcessPA } from '../powershell/startProcessPA';
 import { timePromise } from '../utils/time';
 import nodeCron from 'node-cron';
 import { updateRDO } from '../powershell/updateRDO';
-import { sendUnsignedReestr } from '../powershell/sendUnsignedReestr';
+import {
+    sendUnsignedReestr,
+    sendUnsignedReestrExport,
+} from '../powershell/sendUnsignedReestr';
 
 export const setPowerAUIpc = () => {
     const updateMd = () =>
@@ -42,6 +45,10 @@ export const setPowerAUIpc = () => {
         }
     };
 
+    const sendReestr = () => {
+        sendUnsignedReestr();
+        sendUnsignedReestrExport();
+    };
     ipcMain.on('sendUpdateMd', () => updateMd());
     ipcMain.on('sendUpdateModel', () => updateModel());
     ipcMain.on('sendUpdateQuotes', () => updateQuotes());
@@ -50,11 +57,13 @@ export const setPowerAUIpc = () => {
     ipcMain.on('sendReportDebug', () => sendReportsTG());
     ipcMain.on('sendUpdateModelAll', () => updateModelAll());
     ipcMain.on('sendUpdateF19QuerryReport', () => updateF19QueryReport());
-    ipcMain.on('sendUnsignedReestr', () => sendUnsignedReestr());
+    ipcMain.on('sendUnsignedReestr', sendReestr);
 
     // planner
     let taskRegistersMd: nodeCron.ScheduledTask;
-    let taskUnsignedReestr: nodeCron.ScheduledTask;
+    let taskReestrMonday: nodeCron.ScheduledTask;
+    let taskReestrThursday: nodeCron.ScheduledTask;
+
     const plannerPA = async () => {
         bot.log.bot('register md log planner started');
         updateRegister();
@@ -73,8 +82,9 @@ export const setPowerAUIpc = () => {
         updateModelAll,
         plannerPA,
         taskRegistersMd,
-        taskUnsignedReestr: taskUnsignedReestr,
-        sendUnsignedReestr,
+        taskReestrMonday,
+        taskReestrThursday,
+        sendReestr,
     };
 };
 

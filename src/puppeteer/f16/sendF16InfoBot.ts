@@ -1,13 +1,18 @@
 import { bot } from '../../bot/bot';
 import { ParsedSSDT } from './parseF16/parseF16';
+import { vessels } from '../fsModule/readConfig';
 
-export const sendF16InfoBot = (f16Array: ParsedSSDT[][]) => {
+export const sendF16InfoBot = (f16Array: ParsedSSDT[][], isTransport?: boolean) => {
     const lastSSD = f16Array.map((f16) => f16[f16.length - 1]);
-    const sortedSSD = lastSSD.sort((prev, next) => {
-        if (next.info.isOutdated || next.info.status.main === 'НЕИЗВЕСТЕН') {
-            return -1;
-        }
-    });
+    const sortedSSD = lastSSD
+        .sort((prev, next) => {
+            if (next.info.isOutdated || next.info.status.main === 'НЕИЗВЕСТЕН') {
+                return -1;
+            }
+        })
+        .sort((prev, next) => {
+            if (vessels.transport.includes(next.info.vessel_id)) return -1;
+        });
 
     const infoReport = sortedSSD.reduce((total, ssd) => {
         const { vessel_name, date, isOutdated, trapData } = ssd.info;
@@ -73,7 +78,7 @@ ${msg.input}${msg.output}${msg.onBoard}${msg.separator}`;
 
         total += reportStr;
         return total;
-    }, '');
+    }, `${isTransport ? '\n\n\n ТРАНСПОРТ' : ''}`);
 
     bot.log.reports(infoReport);
 };

@@ -39,7 +39,7 @@ export const parseStatus = (json: SSDReportT) => {
         status.destination.place = destinationReg[3];
         status.destination.eta = destinationReg[5];
     }
-    status.place = title.split(' - ')[1].split('°')[0].slice(0, -3);
+    status.place = title.split(' - ')[1].split('°')[0];
 
     // parse meteo in tablix5
     const tokens = {
@@ -56,6 +56,10 @@ export const parseStatus = (json: SSDReportT) => {
         'бункеровка': 'Бункеровка',
         'груз.операц.в порту': 'Операции в порту',
         'ож.конт.оф.док.вых.п': 'Оформление документов',
+        'ремонт.суд.мех.': 'Ремонт',
+        'следует на пром.': 'Следует на промысел',
+        'прочие в порту': 'Прочие в порту',
+        'следует в порт': 'Следует в порт',
     };
 
     status.event = table.reduce((total, row) => {

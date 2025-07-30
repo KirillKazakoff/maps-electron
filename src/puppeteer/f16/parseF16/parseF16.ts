@@ -15,6 +15,7 @@ export type ParsedSSDT = {
             board: ProductionOutputT[];
         };
     };
+    type?: string;
 };
 
 export const parseF16 = (report: ReportT) => {

@@ -43,6 +43,7 @@ class BrowserC {
         if (this.errorTimes >= 20) {
             cooldown = 3600 * 1000;
             this.errorTimes = 0;
+            bot.log.tech('OSM портал по техническим причинам недоступен');
         }
         await timePromise(8000);
 

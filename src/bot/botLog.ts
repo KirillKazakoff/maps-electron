@@ -20,6 +20,9 @@ export class BotLog {
     ovedDocs(text: TextT) {
         this.log({ text, ...chat.ovedDocuments });
     }
+    ovedExport(text: TextT) {
+        this.log({ text, ...chat.ovedExport });
+    }
     tech(text: TextT) {
         this.log({ text, ...chat.tech });
     }

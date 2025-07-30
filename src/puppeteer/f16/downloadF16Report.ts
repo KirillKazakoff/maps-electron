@@ -8,6 +8,7 @@ import { settings } from '../fsModule/readConfig';
 import { ParsedSSDT } from './parseF16/parseF16';
 
 export const downloadF16Report = async (date: FormDateT, vesselsArray: string[]) => {
+    // remove dublicates
     let vessels = Array.from(new Set(vesselsArray));
     const f16Data: ParsedSSDT[][] = [];
 

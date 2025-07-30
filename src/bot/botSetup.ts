@@ -10,8 +10,9 @@ if (isDev()) {
     // each chat goes to dev chat
     config.token = config.debugToken;
 
-    Object.values(config.chat).forEach((chat) => {
+    Object.values(config.chat).forEach((chat: any) => {
         chat.id = config.chat.bot.id;
+        chat.options = {};
     });
 }
 
