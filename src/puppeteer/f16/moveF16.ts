@@ -35,7 +35,7 @@ export const moveF16 = (status?: 'debug') => {
             if (!parsedF16) return;
 
             // check if same ssd already in array
-            const isSameVesselInParsed = parsedF16.some((ssdNew) => {
+            const isSameVesselInParsed = parsedF16.some((ssdNew: any) => {
                 return f16Array.some((f16) => {
                     return f16.some(
                         (ssdPrev) => ssdPrev.info.vessel_id === ssdNew.info.vessel_id
@@ -47,12 +47,13 @@ export const moveF16 = (status?: 'debug') => {
             f16Array.push(parsedF16);
         });
 
-        if (!currentSSD) {
+        if (!currentSSD || currentSSD.length === 0) {
             fs.unlinkSync(filePath);
             return;
         }
 
         if (status === 'debug') return;
+
         moveF16Cloud(currentSSD, filePath);
     });
 

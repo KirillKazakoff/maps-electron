@@ -1,9 +1,11 @@
 import fs from 'fs';
-import config from 'C:\\Users\\admin\\iCloudDrive\\Конспираторы\\ОВЭД\\БД Производство\\0_Аналитика ССД\\Конфигурация\\config.json';
 import { botLog } from './botLog';
 import { getDateNow } from '../utils/date';
 import { timePromise } from '../utils/time';
 import { botSetup } from './botSetup';
+import { getConfig } from '../puppeteer/fsModule/readConfig';
+
+const config = getConfig();
 
 type SettingsT = {
     path: string;

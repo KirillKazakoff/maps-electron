@@ -16,7 +16,9 @@ export const moveF10 = (date: string, isFormDate: boolean) => {
 
         const pathDir = isFormDate ? xmlPathes.quotesFormDate : xmlPathes.quotes;
         const newPath = `${pathDir}\\${date}.xlsx`;
-        fs.renameSync(filePath, newPath);
+        fs.copyFileSync(filePath, newPath);
+        fs.unlinkSync(filePath);
+        // fs.renameSync(filePath, newPath);
 
         bot.log.bot(`F10 quotes report ${date} loaded`);
     });

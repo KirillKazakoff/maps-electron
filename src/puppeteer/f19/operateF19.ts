@@ -23,7 +23,9 @@ export const operateF19 = (isUpdateConfig: boolean) => {
             console.log(fileName);
             const filePathNew = `${xmlPathes.f19}\\${fileName}.xlsx`;
 
-            fs.renameSync(filePath, filePathNew);
+            fs.copyFileSync(filePath, filePathNew);
+            fs.unlinkSync(filePath);
+
             return;
         }
 

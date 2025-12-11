@@ -26,6 +26,7 @@ export const parseProdInput = (ssdJson: SSDReportT) => {
 
         return res;
     } catch (e) {
+        console.log(ssdJson);
         console.log(e);
     }
 };

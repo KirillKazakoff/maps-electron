@@ -4,6 +4,8 @@ import fs from 'fs';
 import { ParsedSSDT } from './parseF16/parseF16';
 
 export const moveF16Cloud = (ssdList: ParsedSSDT[], oldPath: string) => {
+    console.log(ssdList[0]);
+
     const pathes = getDirPathes();
     const path = pathes.ssd;
     const ssd = ssdList[ssdList.length - 1];
@@ -14,15 +16,6 @@ export const moveF16Cloud = (ssdList: ParsedSSDT[], oldPath: string) => {
     const cloudSSDNames = fs.readdirSync(`${getDirPathes().ssd}`, {
         withFileTypes: true,
     });
-
-    //moveArchiveOnStartNewMonth
-    // const isStartMonth = DateTime.now().startOf('month').day === DateTime.now().day;
-
-    // if (isStartMonth) {
-    //     cloudSSDNames.forEach((file) => {
-    //         fs.renameSync(`${pathes.ssd}${file.name}`, `${pathes.archive}${file.name}`);
-    //     });
-    // }
 
     // remove if same ssd vessel was before in directory
     const oldSSDNames = cloudSSDNames.filter((dirent) => {
@@ -40,5 +33,8 @@ export const moveF16Cloud = (ssdList: ParsedSSDT[], oldPath: string) => {
     // // move ssd to icloud directory
     const { vessel_id, vessel_name } = ssd.info;
     const newPath = `${path}SSD_${formatedDate}_${vessel_name.toUpperCase()}_${vessel_id}.xml`;
-    fs.renameSync(oldPath, newPath);
+
+    fs.copyFileSync(oldPath, newPath);
+    fs.unlinkSync(oldPath);
+    // fs.renameSync(oldPath, newPath);
 };
